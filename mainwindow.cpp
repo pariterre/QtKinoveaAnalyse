@@ -24,7 +24,7 @@ void MainWindow::on_exportedPathButton_clicked()
 void MainWindow::on_exportedPathEdit_textChanged(const QString &arg1)
 {
     ui->exportedPathEdit->setText(arg1);
-    checkForPathsReady();
+    isPathsReady();
 }
 
 
@@ -38,10 +38,10 @@ void MainWindow::on_exportedConfigButton_clicked()
 void MainWindow::on_exportedConfigEdit_textChanged(const QString &arg1)
 {
     ui->exportedConfigEdit->setText(arg1);
-    checkForPathsReady();
+    isPathsReady();
 }
 
-void MainWindow::checkForPathsReady()
+void MainWindow::isPathsReady()
 {
     QFileInfo kinoFile(ui->exportedPathEdit->text());
     QFileInfo configFile(ui->exportedConfigEdit->text());
@@ -51,3 +51,8 @@ void MainWindow::checkForPathsReady()
         ui->computeButton->setEnabled(false);
 }
 
+
+void MainWindow::on_computeButton_clicked()
+{
+
+}
