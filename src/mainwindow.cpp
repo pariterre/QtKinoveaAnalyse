@@ -69,6 +69,6 @@ void MainWindow::isPathsReady()
 void MainWindow::on_computeButton_clicked()
 {
     QString configFilePath(GetConfigFile().absoluteFilePath());
-    Winter w(configFilePath);
+    ProportionalModel w(configFilePath);
     results->show();
 }

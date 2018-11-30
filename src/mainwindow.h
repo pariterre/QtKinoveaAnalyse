@@ -5,7 +5,7 @@
 #include "QFileDialog"
 
 #include "results.h"
-#include "Winter.h"
+#include "ProportionalModel.h"
 
 namespace Ui {
 class MainWindow;

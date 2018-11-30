@@ -1,6 +1,6 @@
-#include "Winter.h"
+#include "ProportionalModel.h"
 
-Winter::Winter(QString &path)
+ProportionalModel::ProportionalModel(QString &path)
 {
     tinyxml2::XMLDocument xml;
     xml.LoadFile(path.toStdString().c_str());
@@ -18,7 +18,7 @@ Winter::Winter(QString &path)
     while (true){
         if (!landmarkNode)
             break;
-        Winter::Landmark landmark;
+        ProportionalModel::Landmark landmark;
         landmark.SetName(getValueProtected(getNodeProtected(landmarkNode, "Name")));
         _landmarks.push_back(landmark);
 
@@ -32,7 +32,7 @@ Winter::Winter(QString &path)
     while (true){
         if (!segmentNode)
             break;
-        Winter::Segment segment;
+        ProportionalModel::Segment segment;
         segment.SetName(getValueProtected(getNodeProtected(segmentNode, "Name")));
         segment.SetProximal(GetLandmark(getValueProtected(getNodeProtected(segmentNode, "Proximal"))));
         segment.SetDistal(GetLandmark(getValueProtected(getNodeProtected(segmentNode, "Distal"))));
@@ -50,7 +50,7 @@ Winter::Winter(QString &path)
     while (true){
         if (!stickLinkNode)
             break;
-        Winter::Landmark vertice;
+        ProportionalModel::Landmark vertice;
         vertice.SetName(getValueProtected(stickLinkNode));
         _stickLink.push_back(vertice);
 
@@ -59,7 +59,7 @@ Winter::Winter(QString &path)
     }
 }
 
-tinyxml2::XMLNode *Winter::getNodeProtected(tinyxml2::XMLNode *node, const std::string &tagName)
+tinyxml2::XMLNode *ProportionalModel::getNodeProtected(tinyxml2::XMLNode *node, const std::string &tagName)
 {
     tinyxml2::XMLNode * newNode = node->FirstChildElement(tagName.c_str());
     if (newNode)
@@ -68,7 +68,7 @@ tinyxml2::XMLNode *Winter::getNodeProtected(tinyxml2::XMLNode *node, const std::
         throw std::ios_base::failure(tagName + " tag not found");
 }
 
-tinyxml2::XMLNode *Winter::getNextChildProtected(tinyxml2::XMLNode *node, const std::string &tagName)
+tinyxml2::XMLNode *ProportionalModel::getNextChildProtected(tinyxml2::XMLNode *node, const std::string &tagName)
 {
     tinyxml2::XMLNode * newNode = node->NextSiblingElement(tagName.c_str());
     if (newNode)
@@ -77,7 +77,7 @@ tinyxml2::XMLNode *Winter::getNextChildProtected(tinyxml2::XMLNode *node, const 
         throw std::ios_base::failure(tagName + " tag not found");
 }
 
-std::string Winter::getValueProtected(tinyxml2::XMLNode *node)
+std::string ProportionalModel::getValueProtected(tinyxml2::XMLNode *node)
 {
     tinyxml2::XMLNode * newNode = node->FirstChild();
     if (newNode)
@@ -86,60 +86,60 @@ std::string Winter::getValueProtected(tinyxml2::XMLNode *node)
         throw std::ios_base::failure("Value not found");
 }
 
-const Winter::Landmark &Winter::GetLandmark(const std::string &name)
+const ProportionalModel::Landmark &ProportionalModel::GetLandmark(const std::string &name)
 {
-    for (Winter::Landmark& landmark : _landmarks)
+    for (ProportionalModel::Landmark& landmark : _landmarks)
         if (!landmark.GetName().compare(name))
             return landmark;
     throw std::ios_base::failure("Landmark not found");
 }
 
-const std::string &Winter::GenericObject::GetName() const
+const std::string &ProportionalModel::GenericObject::GetName() const
 {
     return _name;
 }
 
-void Winter::GenericObject::SetName(const std::string &name)
+void ProportionalModel::GenericObject::SetName(const std::string &name)
 {
     _name = name;
 }
 
-const Winter::Landmark &Winter::Segment::GetProximal() const
+const ProportionalModel::Landmark &ProportionalModel::Segment::GetProximal() const
 {
     return _proximal;
 }
 
-void Winter::Segment::SetProximal(const Winter::Landmark &proximal)
+void ProportionalModel::Segment::SetProximal(const ProportionalModel::Landmark &proximal)
 {
     _proximal = proximal;
 }
 
-const Winter::Landmark &Winter::Segment::GetDistal() const
+const ProportionalModel::Landmark &ProportionalModel::Segment::GetDistal() const
 {
     return _distal;
 }
 
-void Winter::Segment::SetDistal(const Winter::Landmark &distal)
+void ProportionalModel::Segment::SetDistal(const ProportionalModel::Landmark &distal)
 {
     _distal = distal;
 }
 
-double Winter::Segment::GetRelativeMass() const
+double ProportionalModel::Segment::GetRelativeMass() const
 {
     return _relativeMass;
 }
 
-void Winter::Segment::SetRelativeMass(double relativeMass)
+void ProportionalModel::Segment::SetRelativeMass(double relativeMass)
 {
     _relativeMass = relativeMass;
 }
 
-double Winter::Segment::GetCenterOfMassFromProximal() const
+double ProportionalModel::Segment::GetCenterOfMassFromProximal() const
 {
     return _centerOfMassFromProximal;
 }
 
-void Winter::Segment::SetCenterOfMassFromProximal(double com)
+void ProportionalModel::Segment::SetCenterOfMassFromProximal(double com)
 {
     _centerOfMassFromProximal = com;
 }

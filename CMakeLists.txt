@@ -45,7 +45,7 @@ add_executable(KinoveaAnalyse
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/mainwindow.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/results.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/Winter.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/ProportionalModel.cpp
     ${UI_HEADERS})
 
 # Add the Qt5 Widgets for linking

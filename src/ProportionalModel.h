@@ -1,5 +1,5 @@
-#ifndef WINTER_H
-#define WINTER_H
+#ifndef PROPORTIONAL_MODEL_H
+#define PROPORTIONAL_MODEL_H
 
 #include "QString"
 #include "tinyxml2.h"
@@ -7,10 +7,10 @@
 #include <iostream>
 #include <vector>
 
-class Winter
+class ProportionalModel
 {
 public:
-    Winter(QString& path);
+    ProportionalModel(QString& path);
 
     class GenericObject
     {
@@ -60,4 +60,4 @@ protected:
     std::vector<Landmark> _stickLink;
 };
 
-#endif // WINTER_H
+#endif // PROPORTIONAL_MODEL_H
