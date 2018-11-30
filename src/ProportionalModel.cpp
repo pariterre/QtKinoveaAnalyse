@@ -1,7 +1,7 @@
 #include "ProportionalModel.h"
 
 
-ProportionalModel::ProportionalModel(const QString &path) :
+ProportionalModel::ProportionalModel(const std::string &path) :
     _modelName(""),
     _fileVersion(-1)
 {
@@ -9,10 +9,10 @@ ProportionalModel::ProportionalModel(const QString &path) :
         readXml(path);
 }
 
-void ProportionalModel::readXml(const QString &path)
+void ProportionalModel::readXml(const std::string &path)
 {
     tinyxml2::XMLDocument xml;
-    xml.LoadFile(path.toStdString().c_str());
+    xml.LoadFile(path.c_str());
 
     // Read header
     tinyxml2::XMLNode * header = getNodeProtected(&xml, "Header");
@@ -66,33 +66,6 @@ void ProportionalModel::readXml(const QString &path)
         // Move to next sibling
         stickLinkNode = stickLinkNode->NextSiblingElement("Vertice");
     }
-}
-
-tinyxml2::XMLNode *ProportionalModel::getNodeProtected(tinyxml2::XMLNode *node, const std::string &tagName)
-{
-    tinyxml2::XMLNode * newNode = node->FirstChildElement(tagName.c_str());
-    if (newNode)
-        return newNode;
-    else
-        throw std::ios_base::failure(tagName + " tag not found");
-}
-
-tinyxml2::XMLNode *ProportionalModel::getNextChildProtected(tinyxml2::XMLNode *node, const std::string &tagName)
-{
-    tinyxml2::XMLNode * newNode = node->NextSiblingElement(tagName.c_str());
-    if (newNode)
-        return newNode;
-    else
-        throw std::ios_base::failure(tagName + " tag not found");
-}
-
-std::string ProportionalModel::getValueProtected(tinyxml2::XMLNode *node)
-{
-    tinyxml2::XMLNode * newNode = node->FirstChild();
-    if (newNode)
-        return newNode->ToText()->Value();
-    else
-        throw std::ios_base::failure("Value not found");
 }
 
 const ProportionalModel::Landmark &ProportionalModel::GetLandmark(const std::string &name)

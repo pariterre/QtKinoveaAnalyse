@@ -73,6 +73,7 @@ void MainWindow::isPathsReady()
 
 void MainWindow::on_computeButton_clicked()
 {
-    _model.readXml(GetConfigFile().absoluteFilePath());
+    _model.readXml(GetConfigFile().absoluteFilePath().toStdString());
+    _kinovea.readXml(GetKinoFile().absoluteFilePath().toStdString());
     results->show();
 }

@@ -1,16 +1,12 @@
 #ifndef PROPORTIONAL_MODEL_H
 #define PROPORTIONAL_MODEL_H
 
-#include "QString"
-#include "tinyxml2.h"
-#include "exception"
-#include <iostream>
-#include <vector>
+#include "XmlReader.h"
 
-class ProportionalModel
+class ProportionalModel : public XmlReader
 {
 public:
-    ProportionalModel(const QString& = "");
+    ProportionalModel(const std::string & = "");
 
     class GenericObject
     {
@@ -46,13 +42,9 @@ public:
         double _centerOfMassFromProximal;
     };
 
-    void readXml(const QString& path);
+    void readXml(const std::string &path);
     const Landmark& GetLandmark(const std::string& name);
 protected:
-    tinyxml2::XMLNode * getNodeProtected(tinyxml2::XMLNode *, const std::string&);
-    tinyxml2::XMLNode * getNextChildProtected(tinyxml2::XMLNode *, const std::string&);
-    std::string getValueProtected(tinyxml2::XMLNode *);
-
     std::string _modelName;
     double _fileVersion;
 
