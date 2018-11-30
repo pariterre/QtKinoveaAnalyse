@@ -19,7 +19,7 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
     tinyxml2::XMLNode * cell;
     tinyxml2::XMLNode * valueNode;
 
-    size_t nbLandmarksFound(0);
+    std::vector<Frame> frames;
     for (ProportionalModel::Landmark landmark : model.GetLandmarks()){
         bool isLandmarkFound(false);
         Frame f;
@@ -52,7 +52,7 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
                     continue;
                 if (!FirstChildToTextValueProtected(cell).compare(landmark.GetName())){
                     isLandmarkFound = true;
-                    nbLandmarksFound++;
+                    frames.clear();
                     // Skip 2 rows (the third is skiped by the following continue
                     for (int i=0; i<2; ++i){
                         row = row->NextSiblingElement("Row");
@@ -97,13 +97,13 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
             valueNode = cell->FirstChild();
             if (!valueNode) // End of the landmark values
                 break;
-            std::tm t = {};
-            //            std::istringstream ss(valueNode->ToText()->Value());
-            std::istringstream ss("23:12:34:01");
-//            ss >> std::get_time(&t, "%H:%M:%S:%f");
-            ss >> std::get_time(&t, "%H:%M:%S");
+            double t(parseTime(valueNode->ToText()->Value()));
 
-            std::cout << "time = " << std::put_time(&t, "%c") << "; x = " << x << "; y = "<< y << std::endl;
+            f.SetTime(t);
+            f.SetX(x);
+            f.SetY(y);
+            frames.push_back(f);
+
 
             // data_to_stack[0, 0] = datetime.datetime.timestamp(
             //                    datetime.datetime.strptime(root[i+3][2][0].text, "%H:%M:%S:%f")
@@ -112,28 +112,10 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
             //                data_to_stack[2, 0] = root[i+3][1][0].text
             //                data_tp = np.hstack((data_tp, data_to_stack))
         }
-        if (nbLandmarksFound != model.GetLandmarks().size())
-            throw std::runtime_error("All landmarks should appear in the XML file");
+        _frames.push_back(frames);
     }
-
-//        // Find the data for each reperes
-//        for i in range(len(root)):
-//
-//            if not repere_found:
-//                if root[i][0][0].text is not None and len(root[i]) > 1 and root[i][1][0].text == repere:
-//                    repere_found = True
-//            // If we finished the repere
-//            elif len(root) <= i+3 or root[i+3][0][0].text is None:
-//                break
-//            // Otherwise add data
-//            else:
-//                data_to_stack[0, 0] = datetime.datetime.timestamp(
-//                    datetime.datetime.strptime(root[i+3][2][0].text, "%H:%M:%S:%f")
-//                )
-//                data_to_stack[1, 0] = root[i+3][0][0].text
-//                data_to_stack[2, 0] = root[i+3][1][0].text
-//                data_tp = np.hstack((data_tp, data_to_stack))
-//        data[repere] = data_tp  // Save the data
+    if (_frames.size() != model.GetLandmarks().size())
+        throw std::runtime_error("All landmarks should appear in the XML file");
 
 //    // Find share timestamps
 //    // Arbitrarily take the time of first repere as time reference
@@ -153,6 +135,27 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
 //    time = shared_time - shared_time[0]
 //    return data, time
 
+}
+
+double KinoveaReader::parseTime(const std::string &time)
+{
+    size_t idxH(0); // index hour
+    size_t idxM(time.find_first_of(":", idxH + 1)); // index minutes
+    size_t idxS(time.find_first_of(":", idxM + 1)); // index seconds
+    size_t idxF(time.find_first_of(":", idxS + 1)); // index fraction of second
+
+    double hour(std::stod(time.substr(idxH, idxM - idxH)));
+    double min(std::stod(time.substr(idxM + 1, idxS - idxM - 1)));
+    double sec(std::stod(time.substr(idxS + 1, idxF - idxS - 1)));
+    double frac(std::stod(time.substr(idxF + 1)));
+
+    double totalSecond(0);
+    totalSecond += frac / static_cast<double>( std::pow(10, time.substr(idxF + 1).size()) );
+    totalSecond += sec;
+    totalSecond += min * 60.0;
+    totalSecond += hour * 3600.0;
+
+    return totalSecond;
 }
 
 KinoveaReader::Frame::Frame() :
