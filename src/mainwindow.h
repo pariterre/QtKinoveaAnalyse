@@ -21,6 +21,7 @@ public:
 
     QFileInfo GetKinoFile() const;
     QFileInfo GetConfigFile() const;
+    const ProportionalModel& GetModel() const;
 private slots:
     void on_exportedPathEdit_textChanged(const QString &arg1);
     void on_exportedConfigEdit_textChanged(const QString &arg1);
