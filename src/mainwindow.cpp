@@ -28,6 +28,11 @@ QFileInfo MainWindow::GetConfigFile() const
     return ui->exportedConfigEdit->text();
 }
 
+const ProportionalModel &MainWindow::GetModel() const
+{
+    return _model;
+}
+
 void MainWindow::on_exportedPathButton_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
@@ -68,7 +73,6 @@ void MainWindow::isPathsReady()
 
 void MainWindow::on_computeButton_clicked()
 {
-    QString configFilePath(GetConfigFile().absoluteFilePath());
-    ProportionalModel w(configFilePath);
+    _model.readXml(GetConfigFile().absoluteFilePath());
     results->show();
 }

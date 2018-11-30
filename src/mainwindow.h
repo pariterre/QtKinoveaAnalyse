@@ -32,6 +32,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     Results * results;
+    ProportionalModel _model;
 
     void isPathsReady();
 };

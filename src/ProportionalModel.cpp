@@ -1,6 +1,15 @@
 #include "ProportionalModel.h"
 
-ProportionalModel::ProportionalModel(QString &path)
+
+ProportionalModel::ProportionalModel(const QString &path) :
+    _modelName(""),
+    _fileVersion(-1)
+{
+    if (path.compare(""))
+        readXml(path);
+}
+
+void ProportionalModel::readXml(const QString &path)
 {
     tinyxml2::XMLDocument xml;
     xml.LoadFile(path.toStdString().c_str());

@@ -10,7 +10,7 @@
 class ProportionalModel
 {
 public:
-    ProportionalModel(QString& path);
+    ProportionalModel(const QString& = "");
 
     class GenericObject
     {
@@ -46,6 +46,8 @@ public:
         double _centerOfMassFromProximal;
     };
 
+    void readXml(const QString& path);
+    const Landmark& GetLandmark(const std::string& name);
 protected:
     tinyxml2::XMLNode * getNodeProtected(tinyxml2::XMLNode *, const std::string&);
     tinyxml2::XMLNode * getNextChildProtected(tinyxml2::XMLNode *, const std::string&);
@@ -55,7 +57,6 @@ protected:
     double _fileVersion;
 
     std::vector<Landmark> _landmarks;
-    const Landmark& GetLandmark(const std::string& name);
     std::vector<Segment> _segments;
     std::vector<Landmark> _stickLink;
 };
