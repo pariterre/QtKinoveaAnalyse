@@ -10,7 +10,7 @@ public:
 
     class GenericObject
     {
-    public:
+    public:        
         const std::string& GetName() const;
         void SetName(const std::string& name);
     protected:
@@ -23,6 +23,8 @@ public:
 
     class Segment : public GenericObject {
     public:
+        Segment();
+
         const Landmark& GetProximal() const;
         void SetProximal(const Landmark& proximal);
 
@@ -43,7 +45,12 @@ public:
     };
 
     void readXml(const std::string &path);
+
+    const std::vector<Landmark> GetLandmarks() const;
     const Landmark& GetLandmark(const std::string& name);
+
+    const std::vector<Segment> GetSegments() const;
+    const Segment& GetSegment(const std::string& name);
 protected:
     std::string _modelName;
     double _fileVersion;

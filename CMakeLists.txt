@@ -23,7 +23,7 @@ find_package(Qt5Widgets REQUIRED)
 qt5_wrap_ui(UI_HEADERS ui/mainwindow.ui ui/results.ui)
 
 # Add dependencies
-# step 0
+# tinyxml2
 set(RELATIVE_PATH_TO_TINYXML2 external/tinyxml2/)
 find_path(TINYXML2_INCLUDE_DIR tinyxml2.h HINTS ${CMAKE_CURRENT_SOURCE_DIR}/${RELATIVE_PATH_TO_TINYXML2})
 
@@ -40,6 +40,23 @@ endif()
 set(BUILD_TESTING OFF)
 add_subdirectory(${RELATIVE_PATH_TO_TINYXML2})
 
+# date
+set(RELATIVE_PATH_TO_DATE external/date)
+find_path(DATE_INCLUDE_DIR date.h HINTS ${CMAKE_CURRENT_SOURCE_DIR}/${RELATIVE_PATH_TO_DATE}/include/date)
+
+if((NOT DATE_INCLUDE_DIR) OR (NOT EXISTS ${DATE_INCLUDE_DIR}))
+    # we couldn't find the header files for date or they don't exist
+    message("Unable to find date")
+
+    # we have a submodule setup for date, assume it is under external/date
+    # now we need to clone this submodule
+    execute_process(COMMAND git submodule update --init -- ${RELATIVE_PATH_TO_DATE}
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+    find_path(DATE_INCLUDE_DIR date.h HINTS ${CMAKE_CURRENT_SOURCE_DIR}/${RELATIVE_PATH_TO_DATE}/include/date)
+endif()
+set(BUILD_TESTING OFF)
+add_subdirectory(${RELATIVE_PATH_TO_DATE})
+
 # Tell CMake to create the helloworld executable
 add_executable(KinoveaAnalyse
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
@@ -51,6 +68,6 @@ add_executable(KinoveaAnalyse
     ${UI_HEADERS})
 
 # Add the Qt5 Widgets for linking
-target_link_libraries(KinoveaAnalyse tinyxml2 Qt5::Widgets)
+target_link_libraries(KinoveaAnalyse tinyxml2 date_prj Qt5::Widgets)
 target_include_directories(KinoveaAnalyse
-    PUBLIC ${TINYXML2_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src)
+    PUBLIC ${TINYXML2_INCLUDE_DIR} &{DATE_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src)

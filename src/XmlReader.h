@@ -12,9 +12,9 @@ public:
     virtual ~XmlReader();
     virtual void readXml(const std::string& path) = 0;
 protected:
-    tinyxml2::XMLNode * getNodeProtected(tinyxml2::XMLNode *, const std::string&);
-    tinyxml2::XMLNode * getNextChildProtected(tinyxml2::XMLNode *, const std::string&);
-    std::string getValueProtected(tinyxml2::XMLNode *);
+    tinyxml2::XMLNode * FirstChildElementProtected(tinyxml2::XMLNode *, const std::string&);
+    tinyxml2::XMLNode * NextSiblingElementProtected(tinyxml2::XMLNode *, const std::string&);
+    std::string FirstChildToTextValueProtected(tinyxml2::XMLNode *);
 
 };
 
