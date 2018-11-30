@@ -52,6 +52,9 @@
       <height>25</height>
      </rect>
     </property>
+    <property name="text">
+     <string>/home/pariterre/programmation/QtKinoveaAnalyse/box_jump.xml</string>
+    </property>
    </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
@@ -87,6 +90,9 @@
       <width>521</width>
       <height>25</height>
      </rect>
+    </property>
+    <property name="text">
+     <string>/home/pariterre/programmation/QtKinoveaAnalyse/Winter.xml</string>
     </property>
    </widget>
    <widget class="QPushButton" name="exportedConfigButton">
