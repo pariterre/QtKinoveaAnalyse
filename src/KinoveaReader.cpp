@@ -103,38 +103,40 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
             f.SetX(x);
             f.SetY(y);
             frames.push_back(f);
-
-
-            // data_to_stack[0, 0] = datetime.datetime.timestamp(
-            //                    datetime.datetime.strptime(root[i+3][2][0].text, "%H:%M:%S:%f")
-            //                )
-            //                data_to_stack[1, 0] = root[i+3][0][0].text
-            //                data_to_stack[2, 0] = root[i+3][1][0].text
-            //                data_tp = np.hstack((data_tp, data_to_stack))
         }
         _frames.push_back(frames);
     }
     if (_frames.size() != model.GetLandmarks().size())
         throw std::runtime_error("All landmarks should appear in the XML file");
 
-//    // Find share timestamps
-//    // Arbitrarily take the time of first repere as time reference
-//    shared_time = data[reperes_anato[0]][0, :]
-//    shared_time = np.unique(shared_time)
-//    for d in data.values():
-//        shared_time_tp = d[0, np.isin(d[0, :], shared_time)]
-//        shared_time = shared_time[np.isin(shared_time, shared_time_tp)]
-
-//    // Remove unshared timestamps
-//    for (k, d) in data.items():
-//        idx = np.isin(d[0, :], shared_time)
-//        _, idx = np.unique(d[0, idx], return_index=True)
-//        data[k] = d[1:3, idx] * 0.01  // From cm to m
-
-//    // Return data
-//    time = shared_time - shared_time[0]
-//    return data, time
-
+    // The user may not have targeted the same frames for each landmark. We have to drop
+    // the non-shared frames
+    for (size_t currentLandmarkIdx=0; currentLandmarkIdx<_frames.size(); ++currentLandmarkIdx){
+        // Look into the time frames of each landmark. If one time frame doesn't exist in
+        // at least one of the landmark, remove it from the current landmark.
+        for (int currentTimeIdx=static_cast<int>(_frames[currentLandmarkIdx].size()-1); currentTimeIdx>=0; --currentTimeIdx){
+            for (size_t comparedLandmarkIdx=0; comparedLandmarkIdx<_frames.size(); ++comparedLandmarkIdx){
+                bool timeFound(false);
+                for (size_t comparedTimeIdx=0; comparedTimeIdx<_frames[comparedLandmarkIdx].size(); ++comparedTimeIdx){
+                    double time1(_frames[currentLandmarkIdx][static_cast<size_t>(currentTimeIdx)].GetTime());
+                    double time2( _frames[comparedLandmarkIdx][comparedTimeIdx].GetTime());
+                    if ( fabs(time1 - time2) < 1e-10){
+                        if (currentLandmarkIdx == comparedLandmarkIdx && currentTimeIdx != static_cast<int>(comparedTimeIdx))
+                            // There is a bug in Kinovea where timestamps appear sometime
+                            // twice. We must remove them
+                            timeFound = false;
+                        else
+                            timeFound = true;
+                        break;
+                    }
+                }
+                if (!timeFound){
+                    _frames[currentLandmarkIdx].erase(_frames[currentLandmarkIdx].begin() + currentTimeIdx);
+                    break;
+                }
+            }
+        }
+    }
 }
 
 double KinoveaReader::parseTime(const std::string &time)
