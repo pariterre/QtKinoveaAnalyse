@@ -75,5 +75,6 @@ void MainWindow::on_computeButton_clicked()
 {
     _model.readXml(GetConfigFile().absoluteFilePath().toStdString());
     _kinovea.readXml(GetKinoFile().absoluteFilePath().toStdString(), _model);
+    CenterOfMass com(_model, _kinovea);
     results->show();
 }

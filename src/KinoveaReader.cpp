@@ -100,8 +100,7 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
             double t(parseTime(valueNode->ToText()->Value()));
 
             f.SetTime(t);
-            f.SetX(x);
-            f.SetY(y);
+            f.SetPoint(x, y);
             frames.push_back(f);
         }
         _frames.push_back(frames);
@@ -139,6 +138,11 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
     }
 }
 
+const std::vector<std::vector<KinoveaReader::Frame> > KinoveaReader::GetFrames() const
+{
+    return _frames;
+}
+
 double KinoveaReader::parseTime(const std::string &time)
 {
     size_t idxH(0); // index hour
@@ -161,9 +165,7 @@ double KinoveaReader::parseTime(const std::string &time)
 }
 
 KinoveaReader::Frame::Frame() :
-    _t(-1),
-    _x(0),
-    _y(0)
+    _t(-1)
 {
 
 }
@@ -178,22 +180,18 @@ void KinoveaReader::Frame::SetTime(double t)
     _t = t;
 }
 
-double KinoveaReader::Frame::GetX() const
+const Point2d &KinoveaReader::Frame::GetPoint() const
 {
-    return _x;
+    return _point;
 }
 
-void KinoveaReader::Frame::SetX(double x)
+void KinoveaReader::Frame::SetPoint(const Point2d &point)
 {
-    _x = x;
+    _point = point;
 }
 
-double KinoveaReader::Frame::GetY() const
+void KinoveaReader::Frame::SetPoint(double x, double y)
 {
-    return _y;
+    _point = Point2d(x, y);
 }
 
-void KinoveaReader::Frame::SetY(double y)
-{
-    _y =  y;
-}

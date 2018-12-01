@@ -7,6 +7,7 @@
 #include "results.h"
 #include "ProportionalModel.h"
 #include "KinoveaReader.h"
+#include "CenterOfMass.h"
 
 namespace Ui {
 class MainWindow;
