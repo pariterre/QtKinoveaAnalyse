@@ -1,10 +1,12 @@
 #ifndef POINT_2D_H
 #define POINT_2D_H
 
-class Point2d
+#include "Body.h"
+
+class Point2d : public GenericBody
 {
 public:
-    Point2d(double x = 0, double y = 0);
+    Point2d(double x = 0, double y = 0, const std::string& name = "");
 
     double GetX() const;
     void SetX(double x);

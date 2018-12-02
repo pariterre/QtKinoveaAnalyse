@@ -28,7 +28,7 @@ void ProportionalModel::readXml(const std::string &path)
     while (true){
         if (!landmarkNode)
             break;
-        ProportionalModel::Landmark landmark;
+        Landmark landmark;
         landmark.SetName(FirstChildToTextValueProtected(FirstChildElementProtected(landmarkNode, "Name")));
         _landmarks.push_back(landmark);
 
@@ -42,7 +42,7 @@ void ProportionalModel::readXml(const std::string &path)
     while (true){
         if (!segmentNode)
             break;
-        ProportionalModel::Segment segment;
+        Segment segment;
         segment.SetName(FirstChildToTextValueProtected(FirstChildElementProtected(segmentNode, "Name")));
         segment.SetProximal(GetLandmark(FirstChildToTextValueProtected(FirstChildElementProtected(segmentNode, "Proximal"))));
         segment.SetDistal(GetLandmark(FirstChildToTextValueProtected(FirstChildElementProtected(segmentNode, "Distal"))));
@@ -60,7 +60,7 @@ void ProportionalModel::readXml(const std::string &path)
     while (true){
         if (!stickLinkNode)
             break;
-        ProportionalModel::Landmark vertice;
+        Landmark vertice;
         vertice.SetName(FirstChildToTextValueProtected(stickLinkNode));
         _stickLink.push_back(vertice);
 
@@ -69,14 +69,14 @@ void ProportionalModel::readXml(const std::string &path)
     }
 }
 
-const std::vector<ProportionalModel::Landmark> ProportionalModel::GetLandmarks() const
+const std::vector<Landmark> &ProportionalModel::GetLandmarks() const
 {
     return _landmarks;
 }
 
-const ProportionalModel::Landmark &ProportionalModel::GetLandmark(const std::string &name) const
+const Landmark &ProportionalModel::GetLandmark(const std::string &name) const
 {
-    for (const ProportionalModel::Landmark& landmark : _landmarks)
+    for (const Landmark& landmark : _landmarks)
         if (!landmark.GetName().compare(name))
             return landmark;
     throw std::ios_base::failure("Landmark not found");
@@ -90,74 +90,15 @@ size_t ProportionalModel::GetLandmarkIdx(const std::string &name) const
     throw std::ios_base::failure("Landmark not found");
 }
 
-const std::vector<ProportionalModel::Segment> ProportionalModel::GetSegments() const
+const std::vector<Segment> ProportionalModel::GetSegments() const
 {
     return _segments;
 }
 
-const ProportionalModel::Segment &ProportionalModel::GetSegment(const std::string &name)
+const Segment &ProportionalModel::GetSegment(const std::string &name)
 {
-    for (ProportionalModel::Segment& segment : _segments)
+    for (Segment& segment : _segments)
         if (!segment.GetName().compare(name))
             return segment;
     throw std::ios_base::failure("Segment not found");
-}
-
-const std::string &ProportionalModel::GenericObject::GetName() const
-{
-    return _name;
-}
-
-void ProportionalModel::GenericObject::SetName(const std::string &name)
-{
-    _name = name;
-}
-
-ProportionalModel::Segment::Segment() :
-    _proximal(ProportionalModel::Landmark()),
-    _distal(ProportionalModel::Landmark()),
-    _relativeMass(0),
-    _centerOfMassFromProximal(0)
-{
-
-}
-
-const ProportionalModel::Landmark &ProportionalModel::Segment::GetProximal() const
-{
-    return _proximal;
-}
-
-void ProportionalModel::Segment::SetProximal(const ProportionalModel::Landmark &proximal)
-{
-    _proximal = proximal;
-}
-
-const ProportionalModel::Landmark &ProportionalModel::Segment::GetDistal() const
-{
-    return _distal;
-}
-
-void ProportionalModel::Segment::SetDistal(const ProportionalModel::Landmark &distal)
-{
-    _distal = distal;
-}
-
-double ProportionalModel::Segment::GetRelativeMass() const
-{
-    return _relativeMass;
-}
-
-void ProportionalModel::Segment::SetRelativeMass(double relativeMass)
-{
-    _relativeMass = relativeMass;
-}
-
-double ProportionalModel::Segment::GetCenterOfMassFromProximal() const
-{
-    return _centerOfMassFromProximal;
-}
-
-void ProportionalModel::Segment::SetCenterOfMassFromProximal(double com)
-{
-    _centerOfMassFromProximal = com;
 }

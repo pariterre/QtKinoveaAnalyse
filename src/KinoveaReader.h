@@ -20,11 +20,11 @@ public:
     void readXml(const std::string& path);
     void readXml(const std::string& path, const ProportionalModel& model);
 
-    const std::vector<std::vector<Frame>> GetFrames() const;
+    const std::vector<Frame> GetFrames() const;
 protected:
     double parseTime(const std::string& time);
 
-    std::vector<std::vector<Frame>> _frames;
+    std::vector<Frame> _frames;
 };
 
 #endif // KINOVEA_READER_H

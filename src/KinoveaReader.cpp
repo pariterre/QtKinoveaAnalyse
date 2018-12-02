@@ -19,12 +19,14 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
     tinyxml2::XMLNode * cell;
     tinyxml2::XMLNode * valueNode;
 
-    std::vector<Frame> frames;
-    for (ProportionalModel::Landmark landmark : model.GetLandmarks()){
-        bool isLandmarkFound(false);
-        Frame f;
+    size_t nbLandmarks(model.GetLandmarks().size());
+    _frames.clear();
+    for (size_t landmarkIdx = 0; landmarkIdx < nbLandmarks; ++ landmarkIdx){
         row = FirstChildElementProtected(root, "Row");
+        const Landmark& landmark = model.GetLandmarks()[landmarkIdx];
 
+        bool isLandmarkFound(false);
+        size_t frameIdx(0);
         while (true){
             row = row->NextSiblingElement("Row");
             if (!row)
@@ -52,7 +54,6 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
                     continue;
                 if (!FirstChildToTextValueProtected(cell).compare(landmark.GetName())){
                     isLandmarkFound = true;
-                    frames.clear();
                     // Skip 2 rows (the third is skiped by the following continue
                     for (int i=0; i<2; ++i){
                         row = row->NextSiblingElement("Row");
@@ -99,46 +100,42 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
                 break;
             double t(parseTime(valueNode->ToText()->Value()));
 
-            f.SetTime(t);
-            f.SetPoint(x, y);
-            frames.push_back(f);
-        }
-        _frames.push_back(frames);
-    }
-    if (_frames.size() != model.GetLandmarks().size())
-        throw std::runtime_error("All landmarks should appear in the XML file");
-
-    // The user may not have targeted the same frames for each landmark. We have to drop
-    // the non-shared frames
-    for (size_t currentLandmarkIdx=0; currentLandmarkIdx<_frames.size(); ++currentLandmarkIdx){
-        // Look into the time frames of each landmark. If one time frame doesn't exist in
-        // at least one of the landmark, remove it from the current landmark.
-        for (int currentTimeIdx=static_cast<int>(_frames[currentLandmarkIdx].size()-1); currentTimeIdx>=0; --currentTimeIdx){
-            for (size_t comparedLandmarkIdx=0; comparedLandmarkIdx<_frames.size(); ++comparedLandmarkIdx){
-                bool timeFound(false);
-                for (size_t comparedTimeIdx=0; comparedTimeIdx<_frames[comparedLandmarkIdx].size(); ++comparedTimeIdx){
-                    double time1(_frames[currentLandmarkIdx][static_cast<size_t>(currentTimeIdx)].GetTime());
-                    double time2( _frames[comparedLandmarkIdx][comparedTimeIdx].GetTime());
-                    if ( fabs(time1 - time2) < 1e-10){
-                        if (currentLandmarkIdx == comparedLandmarkIdx && currentTimeIdx != static_cast<int>(comparedTimeIdx))
-                            // There is a bug in Kinovea where timestamps appear sometime
-                            // twice. We must remove them
-                            timeFound = false;
-                        else
-                            timeFound = true;
-                        break;
-                    }
-                }
-                if (!timeFound){
-                    _frames[currentLandmarkIdx].erase(_frames[currentLandmarkIdx].begin() + currentTimeIdx);
+            // Find the frame with the timestamp
+            size_t idx(UINT_MAX);
+            for (size_t i = 0; i<_frames.size(); ++i){
+                if (t <= _frames[i].GetTime()){
+                    idx = i;
                     break;
                 }
             }
+            if (idx == UINT_MAX){ // If we didn't find the frame, append a new one
+                Frame f(nbLandmarks);
+                f.SetTime(t);
+                _frames.push_back(f);
+                idx = _frames.size() - 1;
+            } else if (t < _frames[idx].GetTime()) { // If it is smaller than the actual frame, insert a new one there
+                Frame f(nbLandmarks);
+                f.SetTime(t);
+                _frames.insert(_frames.begin() + static_cast<int>(idx), f);
+            }
+
+            // Note there is a bug in Kinovea where timestamps appear sometime
+            // twice. By design, this algorithm removes them
+            _frames.at(idx).SetPoint2d(landmarkIdx, Point2d(x, y, landmark.GetName()));
+            ++frameIdx;
         }
     }
+
+    // The user may not have targeted the same frames for each landmark. We have to drop
+    // the non-shared frames.
+    // And
+    for (size_t i = _frames.size() - 1; i < _frames.size(); --i)
+        if (!_frames[i].isAllSegmentsAreSet())
+            _frames.erase(_frames.begin() + static_cast<int>(i));
+
 }
 
-const std::vector<std::vector<Frame> > KinoveaReader::GetFrames() const
+const std::vector<Frame> KinoveaReader::GetFrames() const
 {
     return _frames;
 }

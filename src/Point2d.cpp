@@ -1,6 +1,7 @@
 #include "Point2d.h"
 
-Point2d::Point2d(double x, double y) :
+Point2d::Point2d(double x, double y, const std::string &name) :
+    GenericBody (name),
     _x(x),
     _y(y)
 {

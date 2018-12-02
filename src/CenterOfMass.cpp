@@ -9,41 +9,43 @@ CenterOfMass::CenterOfMass() :
 void CenterOfMass::computeCoMi(const ProportionalModel &model, const KinoveaReader &kino)
 {
     _comi.clear();
-    for (ProportionalModel::Segment segment : model.GetSegments()){
-        size_t proxIdx(model.GetLandmarkIdx(segment.GetProximal().GetName()));
-        size_t distIdx(model.GetLandmarkIdx(segment.GetDistal().GetName()));
+    for (size_t f = 0; f < kino.GetFrames().size(); ++f){
+        Frame comi(model.GetSegments().size());
 
-        std::vector<Frame> framesProx(kino.GetFrames()[proxIdx]);
-        std::vector<Frame> framesDist(kino.GetFrames()[distIdx]);
-        std::vector<Point2d> comi_seg;
-        size_t nFrames = framesProx.size();
-        for (size_t f = 0; f < nFrames; ++f){
-            comi_seg.push_back(framesProx[f].GetPoint() + segment.GetCenterOfMassFromProximal() * (framesDist[f].GetPoint() - framesProx[f].GetPoint()));
+        Frame frame(kino.GetFrames()[f]);
+        comi.SetTime(frame.GetTime());
+        for (size_t s = 0; s < model.GetSegments().size(); ++s){
+            Segment segment(model.GetSegments()[s]);
+            const Point2d& proximal(frame.GetPoint2d(segment.GetProximal().GetName()));
+            const Point2d& distal(frame.GetPoint2d(segment.GetDistal().GetName()));
+            Point2d p(proximal + segment.GetCenterOfMassFromProximal() * (distal - proximal));
+            p.SetName(segment.GetName());
+            comi.SetPoint2d(s, p);
         }
-        _comi.push_back(comi_seg);
+        _comi.push_back(comi);
     }
 }
 
 void CenterOfMass::computeCoM(const ProportionalModel &model, const KinoveaReader &kino)
 {
     computeCoMi(model, kino);
-
     _com.clear();
-    if (kino.GetFrames().size() == 0)
-        return;
-    size_t nSegments(model.GetSegments().size());
-    size_t nFrames(kino.GetFrames()[0].size());
-    _com.resize(nFrames);
 
-    for (size_t f=0; f<nFrames; ++f)
-        for (size_t s=0; s<nSegments; ++s){
-            Point2d tp(model.GetSegments()[s].GetRelativeMass() * _comi[s][f]);
-            _com[f] += tp;
+    for (size_t f = 0; f < kino.GetFrames().size(); ++f){
+        Frame com(1);
+
+        Frame frame(kino.GetFrames()[f]);
+        com.SetTime(frame.GetTime());
+        for (size_t s=0; s<model.GetSegments().size(); ++s){
+            Point2d tp(model.GetSegments().at(s).GetRelativeMass() * _comi.at(f).GetPoint2d(s));
+            com.SetPoint2d(0, com.GetPoint2d(0) + tp);
         }
-    _isComComputed = true;
+        com.SetPointName(0, "CenterOfMass");
+        _com.push_back(com);
+    }
 }
 
-const std::vector<std::vector<Point2d> > &CenterOfMass::GetComi() const
+const std::vector<Frame> &CenterOfMass::GetComi() const
 {
     if (_isComComputed)
         return _comi;
@@ -51,7 +53,7 @@ const std::vector<std::vector<Point2d> > &CenterOfMass::GetComi() const
         throw std::runtime_error("Call computeCoMi before this function");
 }
 
-const std::vector<Point2d> &CenterOfMass::GetCom() const
+const std::vector<Frame> &CenterOfMass::GetCom() const
 {
     if (_isComComputed)
         return _com;

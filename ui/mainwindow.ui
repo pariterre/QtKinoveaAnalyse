@@ -53,7 +53,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>/home/pariterre/programmation/QtKinoveaAnalyse/box_jump.xml</string>
+     <string>/home/pariterre/programmation/QtKinoveaAnalyse/box_jump_tp.xml</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">

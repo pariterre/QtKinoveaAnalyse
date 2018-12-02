@@ -12,12 +12,12 @@ public:
     void computeCoMi(const ProportionalModel &model, const KinoveaReader &kino);
     void computeCoM(const ProportionalModel &model, const KinoveaReader &kino);
 
-    const std::vector<std::vector<Point2d>>& GetComi() const;
-    const std::vector<Point2d>& GetCom() const;
+    const std::vector<Frame> &GetComi() const;
+    const std::vector<Frame> &GetCom() const;
 protected:
-    std::vector<std::vector<Point2d>> _comi;
+    std::vector<Frame> _comi;
     bool _isComComputed;
-    std::vector<Point2d> _com;
+    std::vector<Frame> _com;
 };
 
 #endif // CENTER_OF_MASS_H
