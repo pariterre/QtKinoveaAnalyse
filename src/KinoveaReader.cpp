@@ -138,7 +138,7 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
     }
 }
 
-const std::vector<std::vector<KinoveaReader::Frame> > KinoveaReader::GetFrames() const
+const std::vector<std::vector<Frame> > KinoveaReader::GetFrames() const
 {
     return _frames;
 }
@@ -162,36 +162,5 @@ double KinoveaReader::parseTime(const std::string &time)
     totalSecond += hour * 3600.0;
 
     return totalSecond;
-}
-
-KinoveaReader::Frame::Frame() :
-    _t(-1)
-{
-
-}
-
-double KinoveaReader::Frame::GetTime() const
-{
-    return _t;
-}
-
-void KinoveaReader::Frame::SetTime(double t)
-{
-    _t = t;
-}
-
-const Point2d &KinoveaReader::Frame::GetPoint() const
-{
-    return _point;
-}
-
-void KinoveaReader::Frame::SetPoint(const Point2d &point)
-{
-    _point = point;
-}
-
-void KinoveaReader::Frame::SetPoint(double x, double y)
-{
-    _point = Point2d(x, y);
 }
 

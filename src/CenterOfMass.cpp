@@ -13,8 +13,8 @@ void CenterOfMass::computeCoMi(const ProportionalModel &model, const KinoveaRead
         size_t proxIdx(model.GetLandmarkIdx(segment.GetProximal().GetName()));
         size_t distIdx(model.GetLandmarkIdx(segment.GetDistal().GetName()));
 
-        std::vector<KinoveaReader::Frame> framesProx(kino.GetFrames()[proxIdx]);
-        std::vector<KinoveaReader::Frame> framesDist(kino.GetFrames()[distIdx]);
+        std::vector<Frame> framesProx(kino.GetFrames()[proxIdx]);
+        std::vector<Frame> framesDist(kino.GetFrames()[distIdx]);
         std::vector<Point2d> comi_seg;
         size_t nFrames = framesProx.size();
         for (size_t f = 0; f < nFrames; ++f){
