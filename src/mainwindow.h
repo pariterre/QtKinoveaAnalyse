@@ -8,6 +8,7 @@
 #include "ProportionalModel.h"
 #include "KinoveaReader.h"
 #include "CenterOfMass.h"
+#include "JointKinematics.h"
 
 namespace Ui {
 class MainWindow;

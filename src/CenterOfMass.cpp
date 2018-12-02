@@ -43,3 +43,13 @@ void CenterOfMass::computeCoM(const ProportionalModel &model, const KinoveaReade
             _com[f] += tp;
         }
 }
+
+const std::vector<std::vector<Point2d> > &CenterOfMass::GetComi() const
+{
+    return _comi;
+}
+
+const std::vector<Point2d> &CenterOfMass::GetCom() const
+{
+    return _com;
+}
