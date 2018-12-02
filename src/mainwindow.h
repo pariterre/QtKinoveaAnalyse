@@ -39,6 +39,8 @@ private:
     Results * results;
     KinoveaReader _kinovea;
     ProportionalModel _model;
+    CenterOfMass _com;
+    JointKinematics _jointAngle;
 
     void isPathsReady();
 };

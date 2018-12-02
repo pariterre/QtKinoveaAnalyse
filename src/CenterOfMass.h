@@ -8,7 +8,7 @@
 class CenterOfMass
 {
 public:
-    CenterOfMass(const ProportionalModel&, const KinoveaReader&);
+    CenterOfMass();
     void computeCoMi(const ProportionalModel &model, const KinoveaReader &kino);
     void computeCoM(const ProportionalModel &model, const KinoveaReader &kino);
 
@@ -16,7 +16,7 @@ public:
     const std::vector<Point2d>& GetCom() const;
 protected:
     std::vector<std::vector<Point2d>> _comi;
-    bool _isComiComputed;
+    bool _isComComputed;
     std::vector<Point2d> _com;
 };
 

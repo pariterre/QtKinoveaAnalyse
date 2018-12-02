@@ -8,8 +8,8 @@
 class JointKinematics
 {
 public:
-    JointKinematics(const ProportionalModel&, const KinoveaReader&);
-
+    JointKinematics();
+    void computeJointAngles(const ProportionalModel&, const KinoveaReader&);
 protected:
 };
 

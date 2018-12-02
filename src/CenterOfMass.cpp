@@ -1,9 +1,9 @@
 #include "CenterOfMass.h"
 
-CenterOfMass::CenterOfMass(const ProportionalModel &model, const KinoveaReader &kino) :
-    _isComiComputed(false)
+CenterOfMass::CenterOfMass() :
+    _isComComputed(false)
 {
-    computeCoM(model, kino);
+
 }
 
 void CenterOfMass::computeCoMi(const ProportionalModel &model, const KinoveaReader &kino)
@@ -22,13 +22,11 @@ void CenterOfMass::computeCoMi(const ProportionalModel &model, const KinoveaRead
         }
         _comi.push_back(comi_seg);
     }
-    _isComiComputed = true;
 }
 
 void CenterOfMass::computeCoM(const ProportionalModel &model, const KinoveaReader &kino)
 {
-    if (!_isComiComputed)
-        computeCoMi(model, kino);
+    computeCoMi(model, kino);
 
     _com.clear();
     if (kino.GetFrames().size() == 0)
@@ -42,14 +40,21 @@ void CenterOfMass::computeCoM(const ProportionalModel &model, const KinoveaReade
             Point2d tp(model.GetSegments()[s].GetRelativeMass() * _comi[s][f]);
             _com[f] += tp;
         }
+    _isComComputed = true;
 }
 
 const std::vector<std::vector<Point2d> > &CenterOfMass::GetComi() const
 {
-    return _comi;
+    if (_isComComputed)
+        return _comi;
+    else
+        throw std::runtime_error("Call computeCoMi before this function");
 }
 
 const std::vector<Point2d> &CenterOfMass::GetCom() const
 {
-    return _com;
+    if (_isComComputed)
+        return _com;
+    else
+        throw std::runtime_error("Call computeCoM before this function");
 }
