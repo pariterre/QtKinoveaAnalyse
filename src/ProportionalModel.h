@@ -3,6 +3,7 @@
 
 #include "XmlReader.h"
 #include "Body.h"
+#include "Joint.h"
 
 class ProportionalModel : public XmlReader
 {
@@ -23,6 +24,7 @@ protected:
     std::vector<Landmark> _landmarks;
     std::vector<Segment> _segments;
     std::vector<Landmark> _stickLink;
+    std::vector<Joint> _joints;
 };
 
 #endif // PROPORTIONAL_MODEL_H

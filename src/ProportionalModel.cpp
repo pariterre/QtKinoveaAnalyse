@@ -13,23 +13,24 @@ void ProportionalModel::readXml(const std::string &path)
 {
     tinyxml2::XMLDocument xml;
     xml.LoadFile(path.c_str());
-    tinyxml2::XMLNode * root(FirstChildElementProtected(&xml, "ProportionalModel"));
+    tinyxml2::XMLElement * root = xml.FirstChildElement("ProportionalModel");
+    if (!root)
+        throw std::ios_base::failure("ProportionalModel tag not found");
 
     // Read header
-    tinyxml2::XMLNode * header = FirstChildElementProtected(root, "Header");
-    _fileVersion = stod(FirstChildToTextValueProtected(FirstChildElementProtected(header, "Version")));
+    _fileVersion = stod(AttributeProperErrorMessage(root, "Version"));
     if (_fileVersion < 1.0)
         throw std::ios_base::failure("Wrong file version");
-    _modelName = FirstChildToTextValueProtected(FirstChildElementProtected(header, "Title"));
+    _modelName = AttributeProperErrorMessage(root, "Title");
 
     // Read the landmarks
     _landmarks.clear();
-    tinyxml2::XMLNode * landmarkNode = FirstChildElementProtected(FirstChildElementProtected(root, "Landmarks"), "Landmark");
+    tinyxml2::XMLElement * landmarkNode = FirstChildElementProtected(FirstChildElementProtected(root, "Landmarks"), "Landmark");
     while (true){
         if (!landmarkNode)
             break;
         Landmark landmark;
-        landmark.SetName(FirstChildToTextValueProtected(FirstChildElementProtected(landmarkNode, "Name")));
+        landmark.SetName(AttributeProperErrorMessage(landmarkNode, "Name"));
         _landmarks.push_back(landmark);
 
         // Move to next sibling
@@ -38,12 +39,12 @@ void ProportionalModel::readXml(const std::string &path)
 
     // Read the segments
     _segments.clear();
-    tinyxml2::XMLNode * segmentNode = FirstChildElementProtected(FirstChildElementProtected(root, "Segments"), "Segment");
+    tinyxml2::XMLElement * segmentNode = FirstChildElementProtected(FirstChildElementProtected(root, "Segments"), "Segment");
     while (true){
         if (!segmentNode)
             break;
         Segment segment;
-        segment.SetName(FirstChildToTextValueProtected(FirstChildElementProtected(segmentNode, "Name")));
+        segment.SetName(AttributeProperErrorMessage(segmentNode, "Name"));
         segment.SetProximal(GetLandmark(FirstChildToTextValueProtected(FirstChildElementProtected(segmentNode, "Proximal"))));
         segment.SetDistal(GetLandmark(FirstChildToTextValueProtected(FirstChildElementProtected(segmentNode, "Distal"))));
         segment.SetRelativeMass(stod(FirstChildToTextValueProtected(FirstChildElementProtected(segmentNode, "RelativeMass"))));
@@ -54,14 +55,31 @@ void ProportionalModel::readXml(const std::string &path)
         segmentNode = segmentNode->NextSiblingElement("Segment");
     }
 
+    // Read the joints
+    _joints.clear();
+    tinyxml2::XMLElement * jointNode = FirstChildElementProtected(FirstChildElementProtected(root, "Joints"), "Joint");
+    while (true){
+        if (!jointNode)
+            break;
+        Joint joint;
+        joint.SetName(AttributeProperErrorMessage(jointNode, "Name"));
+        joint.SetOrigin(GetLandmark(FirstChildToTextValueProtected(FirstChildElementProtected(jointNode, "Origin"))));
+        joint.SetBegin(GetLandmark(FirstChildToTextValueProtected(FirstChildElementProtected(jointNode, "Begin"))));
+        joint.SetEnd(GetLandmark(FirstChildToTextValueProtected(FirstChildElementProtected(jointNode, "End"))));
+        _joints.push_back(joint);
+
+        // Move to next sibling
+        jointNode = jointNode->NextSiblingElement("Joint");
+    }
+
     // Read the stick figure links
     _stickLink.clear();
-    tinyxml2::XMLNode * stickLinkNode = FirstChildElementProtected(FirstChildElementProtected(root, "StickFigure"), "Vertice");
+    tinyxml2::XMLElement * stickLinkNode = FirstChildElementProtected(FirstChildElementProtected(root, "StickFigure"), "Vertice");
     while (true){
         if (!stickLinkNode)
             break;
         Landmark vertice;
-        vertice.SetName(FirstChildToTextValueProtected(stickLinkNode));
+        vertice.SetName(AttributeProperErrorMessage(stickLinkNode, "Name"));
         _stickLink.push_back(vertice);
 
         // Move to next sibling

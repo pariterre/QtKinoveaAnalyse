@@ -13,11 +13,15 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
 {
     tinyxml2::XMLDocument xml;
     xml.LoadFile(path.c_str());
-    tinyxml2::XMLNode * root(FirstChildElementProtected(FirstChildElementProtected(FirstChildElementProtected(&xml, "Workbook"), "Worksheet"), "Table"));
-    tinyxml2::XMLNode * row;
-    tinyxml2::XMLNode * col;
-    tinyxml2::XMLNode * cell;
-    tinyxml2::XMLNode * valueNode;
+    tinyxml2::XMLElement * workbook = xml.FirstChildElement("Workbook");
+    if (!workbook)
+        throw std::ios_base::failure("ProportionalModel tag not found");
+
+    tinyxml2::XMLElement * root(FirstChildElementProtected(FirstChildElementProtected(workbook, "Worksheet"), "Table"));
+    tinyxml2::XMLElement * row;
+    tinyxml2::XMLElement * col;
+    tinyxml2::XMLElement * cell;
+    tinyxml2::XMLElement * valueNode;
 
     size_t nbLandmarks(model.GetLandmarks().size());
     _frames.clear();
@@ -41,7 +45,7 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
                 cell = col->FirstChildElement("Data");
                 if (!cell)
                     continue;
-                valueNode = cell->FirstChild();
+                valueNode = cell->FirstChildElement();
                 if (!valueNode)
                     continue;
                 if (std::string(valueNode->ToText()->Value()).compare("Label :"))
@@ -75,7 +79,7 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
             cell = col->FirstChildElement("Data");
             if (!cell)
                 break; // Unkown error... if it ever happens
-            valueNode = cell->FirstChild();
+            valueNode = cell->FirstChildElement();
             if (!valueNode) // End of the landmark values
                 break;
             double x(std::stod(valueNode->ToText()->Value()));
@@ -85,7 +89,7 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
             cell = col->FirstChildElement("Data");
             if (!cell)
                 break; // Unkown error... if it ever happens
-            valueNode = cell->FirstChild();
+            valueNode = cell->FirstChildElement();
             if (!valueNode) // End of the landmark values
                 break;
             double y(std::stod(valueNode->ToText()->Value()));
@@ -95,7 +99,7 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
             cell = col->FirstChildElement("Data");
             if (!cell)
                 break; // Unkown error... if it ever happens
-            valueNode = cell->FirstChild();
+            valueNode = cell->FirstChildElement();
             if (!valueNode) // End of the landmark values
                 break;
             double t(parseTime(valueNode->ToText()->Value()));

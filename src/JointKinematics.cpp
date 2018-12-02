@@ -5,10 +5,13 @@ JointKinematics::JointKinematics()
 
 }
 
-void JointKinematics::computeJointAngles(const ProportionalModel &, const KinoveaReader &)
+void JointKinematics::computeJointAngles(const ProportionalModel &model, const KinoveaReader &kino)
 {
     // arccos( dot(P1-O, P2-O) / (norm(P1) * norm(P2)) )
-
+    for (size_t f = 0; f < kino.GetFrames().size(); ++f){
+        Frame frame(kino.GetFrames()[f]);
+        //for ()
+    }
 
     //    angles = {}
     //    for (n, s) in segments.items():
