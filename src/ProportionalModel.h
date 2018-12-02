@@ -47,7 +47,8 @@ public:
     void readXml(const std::string &path);
 
     const std::vector<Landmark> GetLandmarks() const;
-    const Landmark& GetLandmark(const std::string& name);
+    const Landmark& GetLandmark(const std::string& name) const;
+    size_t GetLandmarkIdx(const std::string& name) const;
 
     const std::vector<Segment> GetSegments() const;
     const Segment& GetSegment(const std::string& name);

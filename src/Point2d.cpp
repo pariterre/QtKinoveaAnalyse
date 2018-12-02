@@ -37,3 +37,17 @@ Point2d operator-(const Point2d &a, const Point2d &b)
     return Point2d(a.GetX() - b.GetX(), a.GetY() - b.GetY());
 }
 
+
+Point2d operator*(double val, const Point2d &a)
+{
+    return Point2d(val * a.GetX(), val * a.GetY());
+}
+
+Point2d Point2d::operator+=(const Point2d &a)
+{
+    this->_x += a._x;
+    this->_y += a._y;
+    return *this;
+}
+
+

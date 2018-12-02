@@ -12,11 +12,13 @@ public:
     double GetY() const;
     void SetY(double y);
 
+    Point2d operator+=(const Point2d& a);
 protected:
     double _x;
     double _y;
 
 };
+Point2d operator*(double, const Point2d& a);
 Point2d operator+(const Point2d& a, const Point2d& b);
 Point2d operator-(const Point2d& a, const Point2d& b);
 

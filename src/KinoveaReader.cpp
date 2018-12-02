@@ -77,7 +77,7 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
             valueNode = cell->FirstChild();
             if (!valueNode) // End of the landmark values
                 break;
-            double y(std::stod(valueNode->ToText()->Value()));
+            double x(std::stod(valueNode->ToText()->Value()));
 
             // Get X value
             col = col->NextSiblingElement("Cell");
@@ -87,7 +87,7 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
             valueNode = cell->FirstChild();
             if (!valueNode) // End of the landmark values
                 break;
-            double x(std::stod(valueNode->ToText()->Value()));
+            double y(std::stod(valueNode->ToText()->Value()));
 
             // Get Time value
             col = col->NextSiblingElement("Cell");

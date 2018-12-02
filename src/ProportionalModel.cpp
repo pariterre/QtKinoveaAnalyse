@@ -74,11 +74,19 @@ const std::vector<ProportionalModel::Landmark> ProportionalModel::GetLandmarks()
     return _landmarks;
 }
 
-const ProportionalModel::Landmark &ProportionalModel::GetLandmark(const std::string &name)
+const ProportionalModel::Landmark &ProportionalModel::GetLandmark(const std::string &name) const
 {
-    for (ProportionalModel::Landmark& landmark : _landmarks)
+    for (const ProportionalModel::Landmark& landmark : _landmarks)
         if (!landmark.GetName().compare(name))
             return landmark;
+    throw std::ios_base::failure("Landmark not found");
+}
+
+size_t ProportionalModel::GetLandmarkIdx(const std::string &name) const
+{
+    for (size_t i=0; i<_landmarks.size(); ++i)
+        if (!_landmarks[i].GetName().compare(name))
+            return i;
     throw std::ios_base::failure("Landmark not found");
 }
 
