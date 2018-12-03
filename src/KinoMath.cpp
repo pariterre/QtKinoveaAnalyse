@@ -43,6 +43,18 @@ std::vector<Frame> KinoMath::computeCoM(const ProportionalModel &model, const Ki
     return all_com;
 }
 
+std::vector<Frame> KinoMath::computeGrf(const std::vector<Frame> comAcceleration, double masse)
+{
+    std::vector<Frame> all_grf;
+    for (size_t f = 0; f < comAcceleration.size(); ++f){
+        Frame grf(0, 0);
+        grf.SetTime(comAcceleration[f].GetTime());
+        grf.SetGrf(comAcceleration[f].GetPoint2d(0) * masse);
+        all_grf.push_back(grf);
+    }
+    return all_grf;
+}
+
 std::vector<Frame> KinoMath::computeJointAngles(const ProportionalModel &model, const KinoveaReader &kino)
 {
     std::vector<Frame> all_joints;
@@ -72,14 +84,37 @@ std::vector<Frame> KinoMath::computeDerivative(const std::vector<Frame> &frames)
     std::vector<Frame> newFrames = frames;
     newFrames.pop_back(); // Derivative looses the last element
     for (size_t f = 0; f < newFrames.size(); ++f){
+        if (frames[f].isAllSegmentsAreSet()){
+            for (size_t p = 0; p < frames[f].GetNumberOfPoints2d(); ++p){
+                Point2d point_0 = frames[f + 0].GetPoint2d(p);
+                Point2d point_1 = frames[f + 1].GetPoint2d(p); // This is safe thanks to the pop_back
+                Point2d num(point_1 - point_0);
+                num.SetName(point_0.GetName());
+                double denom(frames[f+1].GetTime() - frames[f+0].GetTime());
+                newFrames[f].SetPoint2d(p, num / denom);
+            }
+        }
 
-//        if (f.isAllSegmentsAreSet())
+        if (frames[f].isAllJointsAreSet()){
+            for (size_t j = 0; j < frames[f].GetNumberOfJoints(); ++j){
+                Joint joint_0 = frames[f + 0].GetJoint(j);
+                Joint joint_1 = frames[f + 1].GetJoint(j); // This is safe thanks to the pop_back
+                double num(joint_1.GetAngle() - joint_0.GetAngle());
+                double denom(frames[f+1].GetTime() - frames[f+0].GetTime());
+                joint_0.SetAngle( num / denom );
+                newFrames[f].SetJoint(j, joint_0);
+            }
+        }
     }
+    return newFrames;
+}
 
-//    def derivative(data, time):
-//        new_data = np.ndarray(data.shape)
-//        new_data[:] = np.nan
-//        new_data[:, :, 1:-1] = (data[:, :, 2:] - data[:, :, 0:-2]) / (time[2:] - time[0:-2])
-//        return new_data
+double KinoMath::toDegree(double angleRadian)
+{
+    return angleRadian * 180 / M_PI;
+}
 
+double KinoMath::toRadian(double angleDegree)
+{
+    return angleDegree / 180 * M_PI;
 }

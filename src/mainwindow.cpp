@@ -77,7 +77,13 @@ void MainWindow::on_computeButton_clicked()
     _kinovea.readXml(GetKinoFile().absoluteFilePath().toStdString(), _model);
     _comi = KinoMath::computeCoMi(_model, _kinovea);
     _com =  KinoMath::computeCoM(_model, _kinovea, _comi);
+    _comVelocity = KinoMath::computeDerivative(_com);
+    _comAcceleration = KinoMath::computeDerivative(_comVelocity);
+    _grf = KinoMath::computeGrf(_comAcceleration, 3);
+
     _jointAngle = KinoMath::computeJointAngles(_model, _kinovea);
+    _jointVelocity = KinoMath::computeDerivative(_jointAngle);
+    _jointAcceleration = KinoMath::computeDerivative(_jointVelocity);
 
     results->show();
 }

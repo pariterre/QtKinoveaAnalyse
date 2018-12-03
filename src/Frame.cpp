@@ -1,7 +1,9 @@
 #include "Frame.h"
 
 Frame::Frame(size_t nSegments, size_t nJoints) :
-    _t(-1)
+    _t(-1),
+    _grf(0),
+    _grfIsSet(false)
 {
     _points.resize(nSegments);
     _pointIsSet.resize(nSegments);
@@ -17,6 +19,27 @@ double Frame::GetTime() const
 void Frame::SetTime(double t)
 {
     _t = t;
+}
+
+Point2d Frame::GetGrf() const
+{
+    return _grf;
+}
+
+void Frame::SetGrf(Point2d grf)
+{
+    _grf = grf;
+    _grfIsSet = true;
+}
+
+bool Frame::isGrfSet() const
+{
+    return _grfIsSet;
+}
+
+size_t Frame::GetNumberOfPoints2d() const
+{
+    return _points.size();
 }
 
 const Point2d &Frame::GetPoint2d(const std::string &name) const
@@ -56,6 +79,11 @@ bool Frame::isAllSegmentsAreSet() const
         if (!isSet)
             return false;
     return true;
+}
+
+size_t Frame::GetNumberOfJoints() const
+{
+    return _joints.size();
 }
 
 void Frame::SetJointName(size_t jointIdx, const std::string &name)

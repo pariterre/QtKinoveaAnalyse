@@ -22,10 +22,13 @@ protected:
     double _y;
 
 };
-Point2d operator*(double, const Point2d& a);
-double operator*(const Point2d& a, const Point2d& b); // dot product
 Point2d operator+(const Point2d& a, const Point2d& b);
 Point2d operator-(const Point2d& a, const Point2d& b);
+Point2d operator*(double, const Point2d& a);
+Point2d operator*(const Point2d& a, double);
+double operator*(const Point2d& a, const Point2d& b); // dot product
+Point2d operator/(const Point2d& a, double);
+
 
 
 #endif // POINT_2D_H

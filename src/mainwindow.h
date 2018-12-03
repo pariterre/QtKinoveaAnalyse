@@ -41,7 +41,13 @@ private:
 
     std::vector<Frame> _comi;
     std::vector<Frame> _com;
+    std::vector<Frame> _comVelocity;
+    std::vector<Frame> _comAcceleration;
+    std::vector<Frame> _grf;
+
     std::vector<Frame> _jointAngle;
+    std::vector<Frame> _jointVelocity;
+    std::vector<Frame> _jointAcceleration;
 
     void isPathsReady();
 };

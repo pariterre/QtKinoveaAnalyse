@@ -13,6 +13,11 @@ public:
     double GetTime() const;
     void SetTime(double t);
 
+    Point2d GetGrf() const;
+    void SetGrf(Point2d grf);
+    bool isGrfSet() const;
+
+    size_t GetNumberOfPoints2d() const;
     void SetPointName(size_t segmentIdx, const std::string& name);
     const Point2d& GetPoint2d(const std::string& name) const;
     const Point2d& GetPoint2d(size_t segmentIdx) const;
@@ -20,6 +25,7 @@ public:
     void SetPoint2d(size_t segmentIdx, double x, double y);
     bool isAllSegmentsAreSet() const;
 
+    size_t GetNumberOfJoints() const;
     void SetJointName(size_t jointIdx, const std::string& name);
     const Joint& GetJoint(const std::string& name) const;
     const Joint& GetJoint(size_t jointIdx) const;
@@ -27,6 +33,10 @@ public:
     bool isAllJointsAreSet() const;
 protected:
     double _t;
+
+    Point2d _grf; // Ground reaction forces
+    bool _grfIsSet;
+
     std::vector<Point2d> _points;
     std::vector<bool> _pointIsSet;
 
