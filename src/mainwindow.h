@@ -7,8 +7,7 @@
 #include "results.h"
 #include "ProportionalModel.h"
 #include "KinoveaReader.h"
-#include "CenterOfMass.h"
-#include "JointKinematics.h"
+#include "KinoMath.h"
 
 namespace Ui {
 class MainWindow;
@@ -39,8 +38,10 @@ private:
     Results * results;
     KinoveaReader _kinovea;
     ProportionalModel _model;
-    CenterOfMass _com;
-    JointKinematics _jointAngle;
+
+    std::vector<Frame> _comi;
+    std::vector<Frame> _com;
+    std::vector<Frame> _jointAngle;
 
     void isPathsReady();
 };

@@ -24,12 +24,14 @@ public:
     const Joint& GetJoint(const std::string& name) const;
     const Joint& GetJoint(size_t jointIdx) const;
     void SetJoint(size_t jointIdx, const Joint& joint);
+    bool isAllJointsAreSet() const;
 protected:
     double _t;
     std::vector<Point2d> _points;
     std::vector<bool> _pointIsSet;
 
     std::vector<Joint> _joints;
+    std::vector<bool> _jointIsSet;
 };
 
 #endif  // FRAME_H

@@ -64,7 +64,6 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
                         if (!row) // If we are at the end of the file
                             break;
                     }
-                    std::cout << landmark.GetName() << std::endl;
                 }
                 continue; // Go to the next row
             }

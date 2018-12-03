@@ -6,6 +6,7 @@ Frame::Frame(size_t nSegments, size_t nJoints) :
     _points.resize(nSegments);
     _pointIsSet.resize(nSegments);
     _joints.resize(nJoints);
+    _jointIsSet.resize(nJoints);
 }
 
 double Frame::GetTime() const
@@ -79,5 +80,14 @@ const Joint &Frame::GetJoint(size_t jointIdx) const
 void Frame::SetJoint(size_t jointIdx, const Joint &joint)
 {
     _joints.at(jointIdx) = joint;
+    _jointIsSet.at(jointIdx) = true;
+}
+
+bool Frame::isAllJointsAreSet() const
+{
+    for (bool isSet : _jointIsSet)
+        if (!isSet)
+            return false;
+    return true;
 }
 

@@ -75,7 +75,9 @@ void MainWindow::on_computeButton_clicked()
 {
     _model.readXml(GetConfigFile().absoluteFilePath().toStdString());
     _kinovea.readXml(GetKinoFile().absoluteFilePath().toStdString(), _model);
-    _com.computeCoM(_model, _kinovea);
-    _jointAngle.computeJointAngles(_model, _kinovea);
+    _comi = KinoMath::computeCoMi(_model, _kinovea);
+    _com =  KinoMath::computeCoM(_model, _kinovea, _comi);
+    _jointAngle = KinoMath::computeJointAngles(_model, _kinovea);
+
     results->show();
 }
