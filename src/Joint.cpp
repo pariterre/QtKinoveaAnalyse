@@ -2,6 +2,7 @@
 
 Joint::Joint(const Landmark& origin, const Landmark& begin, const Landmark& end, const std::string& name) :
     GenericBody (name),
+    _angle(0),
     _origin(origin),
     _begin(begin),
     _end(end)
@@ -37,4 +38,14 @@ void Joint::SetBegin(const Landmark &begin)
 void Joint::SetEnd(const Landmark &end)
 {
     _end = end;
+}
+
+double Joint::GetAngle() const
+{
+    return _angle;
+}
+
+void Joint::SetAngle(double angle)
+{
+    _angle = angle;
 }

@@ -1,10 +1,11 @@
 #include "Frame.h"
 
-Frame::Frame(size_t nSegments) :
+Frame::Frame(size_t nSegments, size_t nJoints) :
     _t(-1)
 {
     _points.resize(nSegments);
     _pointIsSet.resize(nSegments);
+    _joints.resize(nJoints);
 }
 
 double Frame::GetTime() const
@@ -55,3 +56,28 @@ bool Frame::isAllSegmentsAreSet() const
             return false;
     return true;
 }
+
+void Frame::SetJointName(size_t jointIdx, const std::string &name)
+{
+    _joints.at(jointIdx).SetName(name);
+}
+
+const Joint &Frame::GetJoint(const std::string &name) const
+{
+    for (size_t j = 0; j < _joints.size(); ++j){
+        if (!_joints[j].GetName().compare(name))
+            return _joints[j];
+    }
+    throw std::runtime_error("Joint not found");
+}
+
+const Joint &Frame::GetJoint(size_t jointIdx) const
+{
+    return _joints.at(jointIdx);
+}
+
+void Frame::SetJoint(size_t jointIdx, const Joint &joint)
+{
+    _joints.at(jointIdx) = joint;
+}
+

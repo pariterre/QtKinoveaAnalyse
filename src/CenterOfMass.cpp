@@ -10,7 +10,7 @@ void CenterOfMass::computeCoMi(const ProportionalModel &model, const KinoveaRead
 {
     _comi.clear();
     for (size_t f = 0; f < kino.GetFrames().size(); ++f){
-        Frame comi(model.GetSegments().size());
+        Frame comi(model.GetSegments().size(), 0);
 
         Frame frame(kino.GetFrames()[f]);
         comi.SetTime(frame.GetTime());
@@ -32,7 +32,7 @@ void CenterOfMass::computeCoM(const ProportionalModel &model, const KinoveaReade
     _com.clear();
 
     for (size_t f = 0; f < kino.GetFrames().size(); ++f){
-        Frame com(1);
+        Frame com(1, 0);
 
         Frame frame(kino.GetFrames()[f]);
         com.SetTime(frame.GetTime());

@@ -120,3 +120,8 @@ const Segment &ProportionalModel::GetSegment(const std::string &name)
             return segment;
     throw std::ios_base::failure("Segment not found");
 }
+
+const std::vector<Joint> &ProportionalModel::GetJoints() const
+{
+    return _joints;
+}

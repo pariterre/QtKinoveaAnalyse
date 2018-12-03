@@ -18,7 +18,11 @@ public:
     void SetOrigin(const Landmark &origin);
     void SetBegin(const Landmark &begin);
     void SetEnd(const Landmark &end);
+
+    double GetAngle() const;
+    void SetAngle(double angle);
 protected:
+    double _angle;
     Landmark _origin;
     Landmark _begin;
     Landmark _end;

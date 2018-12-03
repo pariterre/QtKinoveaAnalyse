@@ -17,6 +17,8 @@ public:
 
     const std::vector<Segment> GetSegments() const;
     const Segment& GetSegment(const std::string& name);
+
+    const std::vector<Joint>& GetJoints() const;
 protected:
     std::string _modelName;
     double _fileVersion;

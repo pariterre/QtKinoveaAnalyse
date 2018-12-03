@@ -51,4 +51,12 @@ Point2d Point2d::operator+=(const Point2d &a)
     return *this;
 }
 
+double Point2d::norm() const
+{
+    return sqrt(_x * _x + _y * _y);
+}
 
+double operator*(const Point2d &a, const Point2d &b)
+{
+    return a.GetX() * b.GetX() + a.GetY() * b.GetY();
+}
