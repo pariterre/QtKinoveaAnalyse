@@ -19,6 +19,7 @@ public:
     const Segment& GetSegment(const std::string& name);
 
     const std::vector<Joint>& GetJoints() const;
+    const std::vector<Landmark>& GetStickLink() const;
 protected:
     std::string _modelName;
     double _fileVersion;

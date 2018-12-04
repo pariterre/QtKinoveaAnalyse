@@ -1,8 +1,7 @@
 #ifndef RESULTS_H
 #define RESULTS_H
 
-#include <chrono>
-#include <thread>
+#include <limits>
 
 #include <QDialog>
 #include <QtCharts/QChartView>
@@ -33,6 +32,7 @@ private slots:
 private:
     Ui::Results *ui;
     int _margin;
+    double _aspectRatio;
 
     const MainWindow & GetMainWindow();
 };

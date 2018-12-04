@@ -125,3 +125,8 @@ const std::vector<Joint> &ProportionalModel::GetJoints() const
 {
     return _joints;
 }
+
+const std::vector<Landmark> &ProportionalModel::GetStickLink() const
+{
+    return _stickLink;
+}
