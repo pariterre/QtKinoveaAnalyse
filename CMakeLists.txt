@@ -17,7 +17,7 @@ if(WIN32)
 endif()
 
 # Find the QtWidgets library
-find_package(Qt5Widgets REQUIRED)
+find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Charts)
 
 # Generate code from ui files
 qt5_wrap_ui(UI_HEADERS ui/mainwindow.ui ui/results.ui)
@@ -56,6 +56,6 @@ add_executable(KinoveaAnalyse
     ${UI_HEADERS})
 
 # Add the Qt5 Widgets for linking
-target_link_libraries(KinoveaAnalyse tinyxml2 Qt5::Widgets)
+target_link_libraries(KinoveaAnalyse tinyxml2 Qt5::Widgets Qt5::Charts)
 target_include_directories(KinoveaAnalyse
     PUBLIC ${TINYXML2_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src)

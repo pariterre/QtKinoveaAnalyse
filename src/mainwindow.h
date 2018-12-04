@@ -23,7 +23,19 @@ public:
 
     QFileInfo GetKinoFile() const;
     QFileInfo GetConfigFile() const;
+
     const ProportionalModel& GetModel() const;
+    const KinoveaReader& GetKinovea() const;
+
+    const std::vector<Frame>& GetComi() const;
+    const std::vector<Frame>& GetCom() const;
+    const std::vector<Frame>& GetComVelocity() const;
+    const std::vector<Frame>& GetComAcceleration() const;
+    const std::vector<Frame>& GetGrf() const;
+
+    const std::vector<Frame>& GetJointAngle() const;
+    const std::vector<Frame>& GetJointVelocity() const;
+    const std::vector<Frame>& GetJointAcceleration() const;
 
 private slots:
     void on_exportedPathEdit_textChanged(const QString &arg1);

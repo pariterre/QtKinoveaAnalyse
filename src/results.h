@@ -1,7 +1,16 @@
 #ifndef RESULTS_H
 #define RESULTS_H
 
+#include <chrono>
+#include <thread>
+
 #include <QDialog>
+#include <QtCharts/QChartView>
+#include <QtCharts/QLineSeries>
+#include <QtCharts/QSplineSeries>
+#include <QtCharts/QValueAxis>
+
+#include "Frame.h"
 
 namespace Ui {
 class Results;
@@ -16,11 +25,15 @@ public:
     explicit Results(QWidget *parent = nullptr);
     ~Results();
 
+    void prepareWidgets();
+    void resizeEvent(QResizeEvent* event = nullptr);
 private slots:
     void on_NextWidget_clicked();
 
 private:
     Ui::Results *ui;
+    int _margin;
+
     const MainWindow & GetMainWindow();
 };
 #include "mainwindow.h"

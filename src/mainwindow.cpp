@@ -33,6 +33,51 @@ const ProportionalModel &MainWindow::GetModel() const
     return _model;
 }
 
+const KinoveaReader &MainWindow::GetKinovea() const
+{
+    return _kinovea;
+}
+
+const std::vector<Frame> &MainWindow::GetComi() const
+{
+    return _comi;
+}
+
+const std::vector<Frame> &MainWindow::GetCom() const
+{
+    return _com;
+}
+
+const std::vector<Frame> &MainWindow::GetComVelocity() const
+{
+    return _comVelocity;
+}
+
+const std::vector<Frame> &MainWindow::GetComAcceleration() const
+{
+    return _comAcceleration;
+}
+
+const std::vector<Frame> &MainWindow::GetGrf() const
+{
+    return _grf;
+}
+
+const std::vector<Frame> &MainWindow::GetJointAngle() const
+{
+    return _jointAngle;
+}
+
+const std::vector<Frame> &MainWindow::GetJointVelocity() const
+{
+    return _jointVelocity;
+}
+
+const std::vector<Frame> &MainWindow::GetJointAcceleration() const
+{
+    return _jointAcceleration;
+}
+
 void MainWindow::on_exportedPathButton_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
@@ -85,5 +130,6 @@ void MainWindow::on_computeButton_clicked()
     _jointVelocity = KinoMath::computeDerivative(_jointAngle);
     _jointAcceleration = KinoMath::computeDerivative(_jointVelocity);
 
+    results->prepareWidgets();
     results->show();
 }
