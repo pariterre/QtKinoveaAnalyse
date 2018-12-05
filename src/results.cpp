@@ -191,10 +191,22 @@ void Results::resizeEvent(QResizeEvent *event)
     ui->PreviousWidget->setGeometry(size().width()/2 - previousButtonRectangle.width() - _margin,
                                 size().height() - previousButtonRectangle.height() - _margin,
                                 previousButtonRectangle.width(), previousButtonRectangle.height());
+
+    QSize previousFastButtonRectangle(ui->PreviousWidgetFast->size());
+    ui->PreviousWidgetFast->setGeometry(size().width()/2 - previousFastButtonRectangle.width() - ui->PreviousWidget->geometry().width() - 2*_margin ,
+                                size().height() - previousFastButtonRectangle.height() - _margin,
+                                previousFastButtonRectangle.width(), previousFastButtonRectangle.height());
+
     QSize nextButtonRectangle(ui->NextWidget->size());
     ui->NextWidget->setGeometry(size().width()/2 + _margin,
                                 size().height() - nextButtonRectangle.height() - _margin,
                                 nextButtonRectangle.width(), nextButtonRectangle.height());
+
+    QSize nextFastButtonRectangle(ui->NextWidgetFast->size());
+    ui->NextWidgetFast->setGeometry(size().width()/2 + ui->NextWidget->geometry().width() + 2*_margin,
+                                    size().height() - nextFastButtonRectangle.height() - _margin,
+                                    nextFastButtonRectangle.width(), nextFastButtonRectangle.height());
+
 
     // Resize the stacked widget
     resizeWidgetSubplot(ui->modelPositionWidget, 0, 1, 0, 4, _aspectRatio);
@@ -301,8 +313,6 @@ const MainWindow & Results::GetMainWindow()
     return *dynamic_cast<MainWindow*>(this->parent());
 }
 
-
-
 void Results::on_NextWidget_clicked()
 {
     if (ui->modelPositionWidget->count() != 0){
@@ -316,7 +326,6 @@ void Results::on_NextWidget_clicked()
     resizeEvent();
 }
 
-
 void Results::on_PreviousWidget_clicked()
 {
     if (ui->modelPositionWidget->count() != 0){
@@ -328,4 +337,16 @@ void Results::on_PreviousWidget_clicked()
         ui->jointAngleWidget->setCurrentIndex(ui->modelPositionWidget->currentIndex());
     }
     resizeEvent();
+}
+
+void Results::on_PreviousWidgetFast_clicked()
+{
+    for (size_t i = 0; i<5; ++i)
+        on_PreviousWidget_clicked();
+}
+
+void Results::on_NextWidgetFast_clicked()
+{
+    for (size_t i = 0; i<5; ++i)
+        on_NextWidget_clicked();
 }

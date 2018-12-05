@@ -34,6 +34,10 @@ private slots:
     void on_NextWidget_clicked();
     void on_PreviousWidget_clicked();
 
+    void on_PreviousWidgetFast_clicked();
+
+    void on_NextWidgetFast_clicked();
+
 private:
     enum Type{
         POINT_X,

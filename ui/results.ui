@@ -117,6 +117,32 @@
     <string>&lt;</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="NextWidgetFast">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>450</y>
+     <width>80</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>&gt;&gt;</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="PreviousWidgetFast">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>450</y>
+     <width>80</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>&lt;&lt;</string>
+   </property>
+  </widget>
   <zorder>modelPositionWidget</zorder>
   <zorder>comHeightWidget</zorder>
   <zorder>comVelocityWidget</zorder>
@@ -125,6 +151,8 @@
   <zorder>jointAngleWidget</zorder>
   <zorder>NextWidget</zorder>
   <zorder>PreviousWidget</zorder>
+  <zorder>NextWidgetFast</zorder>
+  <zorder>PreviousWidgetFast</zorder>
  </widget>
  <resources/>
  <connections/>
