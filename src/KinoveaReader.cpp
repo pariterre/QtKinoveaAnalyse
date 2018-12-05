@@ -1,4 +1,11 @@
-#include "KinoveaReader.h"
+#include <KinoveaReader.h>
+
+#include <tinyxml2.h>
+#include <Landmark.h>
+#include <Frame.h>
+#include <Point2d.h>
+#include <ProportionalModel.h>
+#include <Joint.h>
 
 KinoveaReader::KinoveaReader()
 {
@@ -138,7 +145,7 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
 
 }
 
-const std::vector<Frame> KinoveaReader::GetFrames() const
+const std::vector<Frame>& KinoveaReader::GetFrames() const
 {
     return _frames;
 }

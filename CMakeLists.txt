@@ -46,8 +46,10 @@ add_executable(KinoveaAnalyse
     ${CMAKE_CURRENT_SOURCE_DIR}/src/mainwindow.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/results.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/XmlReader.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/Body.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/GenericBody.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Point2d.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Segment.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Landmark.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Frame.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Joint.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ProportionalModel.cpp

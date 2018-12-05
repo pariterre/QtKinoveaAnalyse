@@ -1,5 +1,9 @@
-#include "ProportionalModel.h"
+#include <ProportionalModel.h>
 
+#include <tinyxml2.h>
+#include <Segment.h>
+#include <Landmark.h>
+#include <Joint.h>
 
 ProportionalModel::ProportionalModel(const std::string &path) :
     _modelName(""),
@@ -108,7 +112,7 @@ size_t ProportionalModel::GetLandmarkIdx(const std::string &name) const
     throw std::ios_base::failure("Landmark not found");
 }
 
-const std::vector<Segment> ProportionalModel::GetSegments() const
+const std::vector<Segment> &ProportionalModel::GetSegments() const
 {
     return _segments;
 }

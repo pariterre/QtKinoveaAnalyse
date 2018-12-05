@@ -1,4 +1,7 @@
-#include "XmlReader.h"
+#include <XmlReader.h>
+
+#include <exception>
+#include <tinyxml2.h>
 
 XmlReader::~XmlReader()
 {

@@ -1,13 +1,20 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include "QFileDialog"
+#include <memory>
+#include <vector>
 
-#include "results.h"
-#include "ProportionalModel.h"
-#include "KinoveaReader.h"
-#include "KinoMath.h"
+#include <QMainWindow>
+#include <QFileDialog>
+
+class ProportionalModel;
+class KinoveaReader;
+class Joint;
+class Frame;
+class Point2d;
+class Landmark;
+class Segment;
+class Results;
 
 namespace Ui {
 class MainWindow;
@@ -48,8 +55,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
     Results * results;
-    KinoveaReader _kinovea;
-    ProportionalModel _model;
+    std::shared_ptr<KinoveaReader> _kinovea;
+    std::shared_ptr<ProportionalModel> _model;
 
     std::vector<Frame> _comi;
     std::vector<Frame> _com;

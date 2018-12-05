@@ -1,43 +1,64 @@
-#include "Joint.h"
+#include <Joint.h>
 
-Joint::Joint(const Landmark& origin, const Landmark& begin, const Landmark& end, const std::string& name) :
+#include <KinoMath.h>
+#include <Landmark.h>
+
+Joint::Joint(const std::string &name) :
     GenericBody (name),
     _angle(0),
-    _origin(origin),
-    _begin(begin),
-    _end(end)
+    _origin(new Landmark()),
+    _begin(new Landmark()),
+    _end(new Landmark())
+{
+
+}
+
+Joint::Joint(const Landmark& origin,
+             const Landmark& begin,
+             const Landmark& end,
+             const std::string& name) :
+    GenericBody (name),
+    _angle(0),
+    _origin(new Landmark(origin)),
+    _begin(new Landmark(begin)),
+    _end(new Landmark(end))
 {
 
 }
 
 const Landmark &Joint::GetOrigin() const
 {
-    return _origin;
+    return *_origin;
 }
 
 const Landmark &Joint::GetBegin() const
 {
-    return _begin;
+    return *_begin;
 }
 
 const Landmark &Joint::GetEnd() const
 {
-    return _end;
+    return *_end;
 }
 
 void Joint::SetOrigin(const Landmark &origin)
 {
-    _origin = origin;
+    *_origin = origin;
 }
 
 void Joint::SetBegin(const Landmark &begin)
 {
-    _begin = begin;
+    *_begin = begin;
 }
 
 void Joint::SetEnd(const Landmark &end)
 {
-    _end = end;
+    *_end = end;
+}
+
+double Joint::GetAngleDegree() const
+{
+    return KinoMath::toDegree(GetAngle());
 }
 
 double Joint::GetAngle() const

@@ -36,7 +36,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Next</string>
+    <string>&gt;</string>
    </property>
   </widget>
   <widget class="QStackedWidget" name="comHeightWidget">
@@ -104,6 +104,27 @@
     <number>-1</number>
    </property>
   </widget>
+  <widget class="QPushButton" name="PreviousWidget">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>450</y>
+     <width>80</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>&lt;</string>
+   </property>
+  </widget>
+  <zorder>modelPositionWidget</zorder>
+  <zorder>comHeightWidget</zorder>
+  <zorder>comVelocityWidget</zorder>
+  <zorder>comAccelerationWidget</zorder>
+  <zorder>grfWidget</zorder>
+  <zorder>jointAngleWidget</zorder>
+  <zorder>NextWidget</zorder>
+  <zorder>PreviousWidget</zorder>
  </widget>
  <resources/>
  <connections/>

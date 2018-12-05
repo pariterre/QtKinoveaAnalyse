@@ -1,24 +1,9 @@
-#include "Body.h"
-
-GenericBody::GenericBody(const std::string &name) :
-    _name(name)
-{
-
-}
-
-const std::string &GenericBody::GetName() const
-{
-    return _name;
-}
-
-void  GenericBody::SetName(const std::string &name)
-{
-    _name = name;
-}
+#include <Segment.h>
+#include <Landmark.h>
 
 Segment::Segment() :
-    _proximal(Landmark()),
-    _distal(Landmark()),
+    _proximal(new Landmark()),
+    _distal(new Landmark()),
     _relativeMass(0),
     _centerOfMassFromProximal(0)
 {
@@ -27,22 +12,22 @@ Segment::Segment() :
 
 const Landmark &Segment::GetProximal() const
 {
-    return _proximal;
+    return *_proximal;
 }
 
 void Segment::SetProximal(const Landmark &proximal)
 {
-    _proximal = proximal;
+    *_proximal = proximal;
 }
 
 const Landmark &Segment::GetDistal() const
 {
-    return _distal;
+    return *_distal;
 }
 
 void Segment::SetDistal(const Landmark &distal)
 {
-    _distal = distal;
+    *_distal = distal;
 }
 
 double Segment::GetRelativeMass() const

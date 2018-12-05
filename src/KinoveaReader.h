@@ -1,16 +1,16 @@
 #ifndef KINOVEA_READER_H
 #define KINOVEA_READER_H
 
-#include "XmlReader.h"
-#include "ProportionalModel.h"
 #include <iostream>
 #include <sstream>
 #include <locale>
 #include <iomanip>
 #include <cmath>
+#include <vector>
 
-#include "Point2d.h"
-#include "Frame.h"
+#include <XmlReader.h>
+class ProportionalModel;
+class Frame;
 
 class KinoveaReader : public XmlReader
 {
@@ -20,7 +20,7 @@ public:
     void readXml(const std::string& path);
     void readXml(const std::string& path, const ProportionalModel& model);
 
-    const std::vector<Frame> GetFrames() const;
+    const std::vector<Frame>& GetFrames() const;
 protected:
     double parseTime(const std::string& time);
 

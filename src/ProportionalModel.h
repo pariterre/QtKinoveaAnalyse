@@ -1,9 +1,12 @@
 #ifndef PROPORTIONAL_MODEL_H
 #define PROPORTIONAL_MODEL_H
 
-#include "XmlReader.h"
-#include "Body.h"
-#include "Joint.h"
+#include <vector>
+
+#include <XmlReader.h>
+class Joint;
+class Landmark;
+class Segment;
 
 class ProportionalModel : public XmlReader
 {
@@ -15,7 +18,7 @@ public:
     const Landmark& GetLandmark(const std::string& name) const;
     size_t GetLandmarkIdx(const std::string& name) const;
 
-    const std::vector<Segment> GetSegments() const;
+    const std::vector<Segment>& GetSegments() const;
     const Segment& GetSegment(const std::string& name);
 
     const std::vector<Joint>& GetJoints() const;

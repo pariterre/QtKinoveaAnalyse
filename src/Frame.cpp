@@ -1,8 +1,11 @@
-#include "Frame.h"
+#include <Frame.h>
+
+#include <Point2d.h>
+#include <Joint.h>
 
 Frame::Frame(size_t nSegments, size_t nJoints) :
     _t(-1),
-    _grf(0),
+    _grf(new Point2d()),
     _grfIsSet(false)
 {
     _points.resize(nSegments);
@@ -21,14 +24,14 @@ void Frame::SetTime(double t)
     _t = t;
 }
 
-Point2d Frame::GetGrf() const
+const Point2d &Frame::GetGrf() const
 {
-    return _grf;
+    return *_grf;
 }
 
 void Frame::SetGrf(Point2d grf)
 {
-    _grf = grf;
+    *_grf = grf;
     _grfIsSet = true;
 }
 

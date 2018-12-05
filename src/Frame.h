@@ -1,9 +1,12 @@
 #ifndef FRAME_H
 #define FRAME_H
 
+#include <memory>
+#include <iostream>
 #include <vector>
-#include "Point2d.h"
-#include "Joint.h"
+
+class Point2d;
+class Joint;
 
 class Frame
 {
@@ -13,7 +16,7 @@ public:
     double GetTime() const;
     void SetTime(double t);
 
-    Point2d GetGrf() const;
+    const Point2d& GetGrf() const;
     void SetGrf(Point2d grf);
     bool isGrfSet() const;
 
@@ -34,7 +37,7 @@ public:
 protected:
     double _t;
 
-    Point2d _grf; // Ground reaction forces
+    std::shared_ptr<Point2d> _grf; // Ground reaction forces
     bool _grfIsSet;
 
     std::vector<Point2d> _points;

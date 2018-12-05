@@ -1,4 +1,4 @@
-#include "Point2d.h"
+#include <Point2d.h>
 
 Point2d::Point2d(double x, double y, const std::string &name) :
     GenericBody (name),

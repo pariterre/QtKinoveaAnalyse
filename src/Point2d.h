@@ -2,7 +2,7 @@
 #define POINT_2D_H
 
 #include <math.h>
-#include "Body.h"
+#include <GenericBody.h>
 
 class Point2d : public GenericBody
 {

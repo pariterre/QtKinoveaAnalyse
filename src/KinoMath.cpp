@@ -1,4 +1,12 @@
-#include "KinoMath.h"
+#include <KinoMath.h>
+
+#include <ProportionalModel.h>
+#include <KinoveaReader.h>
+#include <Frame.h>
+#include <Segment.h>
+#include <Landmark.h>
+#include <Joint.h>
+#include <Point2d.h>
 
 std::vector<Frame> KinoMath::computeCoMi(const ProportionalModel &model, const KinoveaReader &kino)
 {

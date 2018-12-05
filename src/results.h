@@ -2,15 +2,17 @@
 #define RESULTS_H
 
 #include <limits>
+#include <memory>
 
 #include <QDialog>
 #include <QStackedWidget>
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
+#include <QtCharts/QScatterSeries>
 #include <QtCharts/QSplineSeries>
 #include <QtCharts/QValueAxis>
 
-#include "Frame.h"
+class Frame;
 
 namespace Ui {
 class Results;
@@ -27,8 +29,10 @@ public:
 
     void prepareWidgets();
     void resizeEvent(QResizeEvent* event = nullptr);
+    void showEvent(QShowEvent* event = nullptr);
 private slots:
     void on_NextWidget_clicked();
+    void on_PreviousWidget_clicked();
 
 private:
     enum Type{
@@ -46,6 +50,6 @@ private:
 
     const MainWindow & GetMainWindow();
 };
-#include "mainwindow.h"
+#include <mainwindow.h>
 
 #endif // RESULTS_H

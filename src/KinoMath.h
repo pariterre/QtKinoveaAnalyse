@@ -1,9 +1,11 @@
 #ifndef KINOMATH_H
 #define KINOMATH_H
 
-#include "ProportionalModel.h"
-#include "KinoveaReader.h"
-#include "Frame.h"
+#include <vector>
+
+class ProportionalModel;
+class KinoveaReader;
+class Frame;
 
 class KinoMath
 {

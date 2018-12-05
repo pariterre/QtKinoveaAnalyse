@@ -1,10 +1,22 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include <mainwindow.h>
+#include <ui_mainwindow.h>
+
+#include <Joint.h>
+#include <Frame.h>
+#include <Point2d.h>
+#include <Landmark.h>
+#include <Segment.h>
+#include <ProportionalModel.h>
+#include <KinoveaReader.h>
+#include <KinoMath.h>
+#include <results.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    results(new Results(this))
+    results(new Results(this)),
+    _kinovea(new KinoveaReader()),
+    _model(new ProportionalModel())
 {
     ui->setupUi(this);
     results->setWindowModality(Qt::ApplicationModal);
@@ -30,12 +42,12 @@ QFileInfo MainWindow::GetConfigFile() const
 
 const ProportionalModel &MainWindow::GetModel() const
 {
-    return _model;
+    return *_model;
 }
 
 const KinoveaReader &MainWindow::GetKinovea() const
 {
-    return _kinovea;
+    return *_kinovea;
 }
 
 const std::vector<Frame> &MainWindow::GetComi() const
@@ -118,15 +130,15 @@ void MainWindow::isPathsReady()
 
 void MainWindow::on_computeButton_clicked()
 {
-    _model.readXml(GetConfigFile().absoluteFilePath().toStdString());
-    _kinovea.readXml(GetKinoFile().absoluteFilePath().toStdString(), _model);
-    _comi = KinoMath::computeCoMi(_model, _kinovea);
-    _com =  KinoMath::computeCoM(_model, _kinovea, _comi);
+    _model->readXml(GetConfigFile().absoluteFilePath().toStdString());
+    _kinovea->readXml(GetKinoFile().absoluteFilePath().toStdString(), *_model);
+    _comi = KinoMath::computeCoMi(*_model, *_kinovea);
+    _com =  KinoMath::computeCoM(*_model, *_kinovea, _comi);
     _comVelocity = KinoMath::computeDerivative(_com);
     _comAcceleration = KinoMath::computeDerivative(_comVelocity);
     _grf = KinoMath::computeGrf(_comAcceleration, 70);
 
-    _jointAngle = KinoMath::computeJointAngles(_model, _kinovea);
+    _jointAngle = KinoMath::computeJointAngles(*_model, *_kinovea);
     _jointVelocity = KinoMath::computeDerivative(_jointAngle);
     _jointAcceleration = KinoMath::computeDerivative(_jointVelocity);
 

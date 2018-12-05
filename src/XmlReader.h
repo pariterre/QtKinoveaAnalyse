@@ -1,10 +1,11 @@
 #ifndef XML_READER_H
 #define XML_READER_H
 
-#include "tinyxml2.h"
-#include "exception"
 #include <iostream>
-#include <vector>
+
+namespace tinyxml2 {
+class XMLElement;
+}
 
 class XmlReader
 {
