@@ -128,7 +128,9 @@ void Results::prepareWidgets()
     fillTimeFrameGraph(ui->grfWidget, "GRF (N)", GetMainWindow().GetGrf(), GRF_Y);
 
     // Fill the angles
-    {
+    double ymin = std::numeric_limits<double>::max();
+    double ymax = std::numeric_limits<double>::min();
+    for (Frame frame : GetMainWindow().GetJointAngle()){
         // Create the chart
         QtCharts::QChart *chart = new QtCharts::QChart();
         chart->setTitle("Joint angles");
@@ -148,18 +150,35 @@ void Results::prepareWidgets()
             QtCharts::QSplineSeries *serie = new QtCharts::QSplineSeries();
             serie->setName(GetMainWindow().GetModel().GetJoints()[j].GetName().c_str());
             for (Frame frame : GetMainWindow().GetJointAngle())
-                serie->append(frame.GetTime(), frame.GetJoint(j).GetAngle());
+                serie->append(frame.GetTime(), frame.GetJoint(j).GetAngleDegree());
             chart->addSeries(serie);
+
+            if (frame.GetJoint(j).GetAngleDegree() < ymin)
+                ymin = frame.GetJoint(j).GetAngleDegree();
+            if (frame.GetJoint(j).GetAngleDegree() > ymax)
+                ymax = frame.GetJoint(j).GetAngleDegree();
         }
+    }
+
+    // Add a time bar
+    ymin -= (ymax - ymin) * 0.1;
+    ymax += (ymax - ymin) * 0.1;
+    for (size_t f = 0; f < GetMainWindow().GetJointAngle().size(); ++f)
+    {
+        QtCharts::QLineSeries *bar = new QtCharts::QLineSeries();
+        bar->append(GetMainWindow().GetJointAngle()[f].GetTime(), ymin);
+        bar->append(GetMainWindow().GetJointAngle()[f].GetTime(), ymax);
+
+        QtCharts::QChartView *chartView(static_cast<QtCharts::QChartView*>(ui->jointAngleWidget->widget(static_cast<int>(f))));
+        chartView->chart()->addSeries(bar);
 
         // Make sure the size is okay
-        chart->createDefaultAxes();
+        chartView->chart()->createDefaultAxes();
         QtCharts::QValueAxis* axisX(static_cast<QtCharts::QValueAxis*>(chartView->chart()->axisX()));
         QtCharts::QValueAxis* axisY(static_cast<QtCharts::QValueAxis*>(chartView->chart()->axisY()));
         axisX->setRange(0, axisX->max());
         axisX->setTickCount(2);
-        axisY->setRange(axisY->min() - (axisY->max() - axisY->min()) * 0.1,
-                        axisY->max() + (axisY->max() - axisY->min()) * 0.1);
+        axisY->setRange(ymin, ymax);
     }
 }
 
@@ -187,7 +206,7 @@ void Results::resizeEvent(QResizeEvent *event)
 
     // Reposition the legend of angles
     QStackedWidget* w(static_cast<QStackedWidget*>(ui->jointAngleWidget));
-    QtCharts::QChartView* cv(static_cast<QtCharts::QChartView*>(w->widget(0)));
+    QtCharts::QChartView* cv(static_cast<QtCharts::QChartView*>(w->widget(w->currentIndex())));
     QtCharts::QLegend* legend(cv->chart()->legend());
     legend->setGeometry(cv->geometry().width()/2 - legend->size().width() / 2 + 18,
                         cv->geometry().height() - legend->size().height() * 1.5 - 25,
@@ -225,39 +244,56 @@ void Results::resizeWidgetSubplot(QWidget * widget, int row, int numberRow, int 
 
 void Results::fillTimeFrameGraph(QStackedWidget * widget, const std::string& title, const std::vector<Frame> &frames, Type type)
 {
-    // Create the chart
-    QtCharts::QChart *chart = new QtCharts::QChart();
-    chart->setTitle(title.c_str());
-    chart->legend()->hide();
-
-    // Add the chart to the result stackedWidget
-    QtCharts::QChartView *chartView = new QtCharts::QChartView(chart);
-    chartView->setRenderHint(QPainter::Antialiasing);
-    widget->addWidget(chartView);
-
-    // Add the center of mass height
-    QtCharts::QSplineSeries *serie = new QtCharts::QSplineSeries();
     for (Frame frame : frames){
-        if (type == Type::POINT_X)
-            serie->append(frame.GetTime(), frame.GetPoint2d(0).GetX());
-        if (type == Type::POINT_Y)
-            serie->append(frame.GetTime(), frame.GetPoint2d(0).GetY());
-        if (type == Type::GRF_X)
-            serie->append(frame.GetTime(), frame.GetGrf().GetX());
-        if (type == Type::GRF_Y)
-            serie->append(frame.GetTime(), frame.GetGrf().GetY());
-    }
-    chart->addSeries(serie);
+        // Create the chart
+        QtCharts::QChart *chart = new QtCharts::QChart();
+        chart->setTitle(title.c_str());
+        chart->legend()->hide();
 
-    // Make sure the size is okay
-    chart->createDefaultAxes();
-    QtCharts::QValueAxis* axisX(static_cast<QtCharts::QValueAxis*>(chartView->chart()->axisX()));
-    QtCharts::QValueAxis* axisY(static_cast<QtCharts::QValueAxis*>(chartView->chart()->axisY()));
-    axisX->setRange(0, axisX->max());
-    axisX->setTickCount(2);
-    axisY->setRange(axisY->min() - (axisY->max() - axisY->min()) * 0.1,
-                    axisY->max() + (axisY->max() - axisY->min()) * 0.1);
+        // Add the chart to the result stackedWidget
+        QtCharts::QChartView *chartView = new QtCharts::QChartView(chart);
+        chartView->setRenderHint(QPainter::Antialiasing);
+        widget->addWidget(chartView);
 
+        QtCharts::QSplineSeries *serie = new QtCharts::QSplineSeries();
+        double ymin = std::numeric_limits<double>::max();
+        double ymax = std::numeric_limits<double>::min();
+        for (Frame frame : frames){
+            double yval(0);
+            if (type == Type::POINT_X)
+                yval = frame.GetPoint2d(0).GetX();
+            if (type == Type::POINT_Y)
+                yval = frame.GetPoint2d(0).GetY();
+            if (type == Type::GRF_X)
+                yval = frame.GetGrf().GetX();
+            if (type == Type::GRF_Y)
+                yval = frame.GetGrf().GetY();
+            serie->append(frame.GetTime(), yval);
+
+            if (yval < ymin)
+                ymin = yval;
+            if (yval > ymax)
+                ymax = yval;
+        }
+        chart->addSeries(serie);
+
+        // Add a time bar
+        ymin -= (ymax - ymin) * 0.1;
+        ymax += (ymax - ymin) * 0.1;
+        QtCharts::QLineSeries *bar = new QtCharts::QLineSeries();
+        bar->append(frame.GetTime(), ymin);
+        bar->append(frame.GetTime(), ymax);
+        chart->addSeries(bar);
+
+        // Make sure the size is okay
+        chart->createDefaultAxes();
+        QtCharts::QValueAxis* axisX(static_cast<QtCharts::QValueAxis*>(chartView->chart()->axisX()));
+        QtCharts::QValueAxis* axisY(static_cast<QtCharts::QValueAxis*>(chartView->chart()->axisY()));
+        axisX->setRange(0, axisX->max());
+        axisX->setTickCount(2);
+        axisY->setRange(ymin, ymax);
+
+   }
 }
 
 const MainWindow & Results::GetMainWindow()
@@ -269,15 +305,27 @@ const MainWindow & Results::GetMainWindow()
 
 void Results::on_NextWidget_clicked()
 {
-    if (ui->modelPositionWidget->count() != 0)
-        if (ui->modelPositionWidget->currentIndex() < ui->modelPositionWidget->count() - 1)
-            ui->modelPositionWidget->setCurrentIndex(ui->modelPositionWidget->currentIndex() + 1);
+    if (ui->modelPositionWidget->count() != 0){
+        ui->modelPositionWidget->setCurrentIndex(ui->modelPositionWidget->currentIndex() + 1);
+        ui->comHeightWidget->setCurrentIndex(ui->modelPositionWidget->currentIndex());
+        ui->comVelocityWidget->setCurrentIndex(ui->modelPositionWidget->currentIndex());
+        ui->comAccelerationWidget->setCurrentIndex(ui->modelPositionWidget->currentIndex());
+        ui->grfWidget->setCurrentIndex(ui->modelPositionWidget->currentIndex());
+        ui->jointAngleWidget->setCurrentIndex(ui->modelPositionWidget->currentIndex());
+    }
+    resizeEvent();
 }
 
 
 void Results::on_PreviousWidget_clicked()
 {
-    if (ui->modelPositionWidget->count() != 0)
-        if (ui->modelPositionWidget->currentIndex() > 0)
-            ui->modelPositionWidget->setCurrentIndex(ui->modelPositionWidget->currentIndex() - 1);
+    if (ui->modelPositionWidget->count() != 0){
+        ui->modelPositionWidget->setCurrentIndex(ui->modelPositionWidget->currentIndex() - 1);
+        ui->comHeightWidget->setCurrentIndex(ui->modelPositionWidget->currentIndex());
+        ui->comVelocityWidget->setCurrentIndex(ui->modelPositionWidget->currentIndex());
+        ui->comAccelerationWidget->setCurrentIndex(ui->modelPositionWidget->currentIndex());
+        ui->grfWidget->setCurrentIndex(ui->modelPositionWidget->currentIndex());
+        ui->jointAngleWidget->setCurrentIndex(ui->modelPositionWidget->currentIndex());
+    }
+    resizeEvent();
 }
