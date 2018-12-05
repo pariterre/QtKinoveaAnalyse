@@ -124,7 +124,7 @@ void MainWindow::on_computeButton_clicked()
     _com =  KinoMath::computeCoM(_model, _kinovea, _comi);
     _comVelocity = KinoMath::computeDerivative(_com);
     _comAcceleration = KinoMath::computeDerivative(_comVelocity);
-    _grf = KinoMath::computeGrf(_comAcceleration, 3);
+    _grf = KinoMath::computeGrf(_comAcceleration, 70);
 
     _jointAngle = KinoMath::computeJointAngles(_model, _kinovea);
     _jointVelocity = KinoMath::computeDerivative(_jointAngle);

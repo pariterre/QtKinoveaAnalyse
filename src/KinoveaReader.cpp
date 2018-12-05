@@ -124,7 +124,7 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
 
             // Note there is a bug in Kinovea where timestamps appear sometime
             // twice. By design, this algorithm removes them
-            _frames.at(idx).SetPoint2d(landmarkIdx, Point2d(x, y, landmark.GetName()));
+            _frames.at(idx).SetPoint2d(landmarkIdx, Point2d(x/100, y/100, landmark.GetName())); // /100 for cm => m
             ++frameIdx;
         }
     }
