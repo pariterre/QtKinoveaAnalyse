@@ -1,6 +1,13 @@
 #include <results.h>
 #include <ui_results.h>
 
+#include <QStackedWidget>
+#include <QtCharts/QChartView>
+#include <QtCharts/QLineSeries>
+#include <QtCharts/QScatterSeries>
+#include <QtCharts/QSplineSeries>
+#include <QtCharts/QValueAxis>
+
 #include <KinoveaReader.h>
 #include <ProportionalModel.h>
 #include <Frame.h>

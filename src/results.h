@@ -3,16 +3,9 @@
 
 #include <limits>
 #include <memory>
-
 #include <QDialog>
-#include <QStackedWidget>
-#include <QtCharts/QChartView>
-#include <QtCharts/QLineSeries>
-#include <QtCharts/QScatterSeries>
-#include <QtCharts/QSplineSeries>
-#include <QtCharts/QValueAxis>
 
-
+class QStackedWidget;
 class Frame;
 
 namespace Ui {
