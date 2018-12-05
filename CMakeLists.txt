@@ -55,6 +55,7 @@ add_executable(KinoveaAnalyse
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ProportionalModel.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/KinoveaReader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/KinoMath.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/QCallout.cpp
     ${UI_HEADERS})
 
 # Add the Qt5 Widgets for linking

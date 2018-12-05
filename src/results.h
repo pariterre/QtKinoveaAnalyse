@@ -12,6 +12,7 @@
 #include <QtCharts/QSplineSeries>
 #include <QtCharts/QValueAxis>
 
+
 class Frame;
 
 namespace Ui {

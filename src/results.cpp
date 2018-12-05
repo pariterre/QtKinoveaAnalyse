@@ -7,6 +7,7 @@
 #include <Landmark.h>
 #include <Point2d.h>
 #include <Joint.h>
+#include <QCallout.h>
 
 Results::Results(QWidget *parent) :
     QDialog(parent),
@@ -95,6 +96,14 @@ void Results::prepareWidgets()
             actualComSerie->append(com[f].GetPoint2d(0).GetX(), com[f].GetPoint2d(0).GetY());
             actualComSerie->setMarkerSize(comiSerie->markerSize() * 1.5);
             chart->addSeries(actualComSerie);
+
+            Callout * tooltip = new Callout(chart);
+            QPointF comPoint(com[f].GetPoint2d(0).GetX(), com[f].GetPoint2d(0).GetY());
+            tooltip->setText(QString("X: %1 \nY: %2 ").arg(comPoint.x()).arg(comPoint.y()));
+            tooltip->setAnchor(comPoint);
+            tooltip->setZValue(11);
+            tooltip->updateGeometry();
+            tooltip->show();
 
             // Make sure the size is okay
             chart->createDefaultAxes();
