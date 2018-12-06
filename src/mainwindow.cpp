@@ -21,7 +21,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     results->setWindowModality(Qt::ApplicationModal);
     isPathsReady();
-    on_computeButton_clicked();
 }
 
 MainWindow::~MainWindow()
@@ -121,7 +120,8 @@ void MainWindow::isPathsReady()
 {
     QFileInfo kinoFile(GetKinoFile());
     QFileInfo configFile(GetConfigFile());
-    if (kinoFile.exists() && kinoFile.isFile() && configFile.exists() && configFile.isFile())
+    double mass(getMassValue());
+    if (kinoFile.exists() && kinoFile.isFile() && configFile.exists() && configFile.isFile() && mass > 0)
         ui->computeButton->setEnabled(true);
     else
         ui->computeButton->setEnabled(false);
@@ -136,7 +136,7 @@ void MainWindow::on_computeButton_clicked()
     _com =  KinoMath::computeCoM(*_model, *_kinovea, _comi);
     _comVelocity = KinoMath::computeDerivative(_com);
     _comAcceleration = KinoMath::computeDerivative(_comVelocity);
-    _grf = KinoMath::computeGrf(_comAcceleration, 70);
+    _grf = KinoMath::computeGrf(_comAcceleration, getMassValue());
 
     _jointAngle = KinoMath::computeJointAngles(*_model, *_kinovea);
     _jointVelocity = KinoMath::computeDerivative(_jointAngle);
@@ -145,3 +145,25 @@ void MainWindow::on_computeButton_clicked()
     results->prepareWidgets();
     results->show();
 }
+
+void MainWindow::on_subjectMassEdit_editingFinished()
+{
+    double mass(getMassValue());
+    if (mass < 0)
+        ui->subjectMassEdit->setText("");
+    else
+        ui->subjectMassEdit->setText(KinoMath::to_string_with_precision(mass, 1).c_str());
+    isPathsReady();
+}
+
+double MainWindow::getMassValue()
+{
+    double mass(-1.0);
+    try {
+        mass = std::stod(ui->subjectMassEdit->text().toStdString());
+    } catch (std::invalid_argument) {
+        mass = -1.0;
+    }
+    return mass;
+}
+

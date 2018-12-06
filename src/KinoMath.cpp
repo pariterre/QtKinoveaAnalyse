@@ -51,13 +51,13 @@ std::vector<Frame> KinoMath::computeCoM(const ProportionalModel &model, const Ki
     return all_com;
 }
 
-std::vector<Frame> KinoMath::computeGrf(const std::vector<Frame> comAcceleration, double masse)
+std::vector<Frame> KinoMath::computeGrf(const std::vector<Frame> comAcceleration, double mass)
 {
     std::vector<Frame> all_grf;
     for (size_t f = 0; f < comAcceleration.size(); ++f){
         Frame grf(0, 0);
         grf.SetTime(comAcceleration[f].GetTime());
-        grf.SetGrf(comAcceleration[f].GetPoint2d(0) * masse);
+        grf.SetGrf(comAcceleration[f].GetPoint2d(0) * mass);
         all_grf.push_back(grf);
     }
     return all_grf;
@@ -126,3 +126,20 @@ double KinoMath::toRadian(double angleDegree)
 {
     return angleDegree / 180 * M_PI;
 }
+
+std::string KinoMath::to_string_with_precision(double val, const int n)
+{
+    std::ostringstream out;
+    out.precision(n);
+    out << std::fixed << val;
+    return out.str();
+}
+
+//template <typename T>
+//std::string KinoMath::to_string_with_precision(const T a_value, const int n)
+//{
+//    std::ostringstream out;
+//    out.precision(n);
+//    out << std::fixed << a_value;
+//    return out.str();
+//}

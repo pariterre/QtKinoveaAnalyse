@@ -16,7 +16,7 @@ QT_CHARTS_USE_NAMESPACE
 class Callout : public QGraphicsItem
 {
 public:
-    Callout(QChart *parent);
+    Callout(QChart *parent, const QPointF& = QPointF());
 
     void setText(const QString &text);
     void setAnchor(QPointF point);
@@ -36,6 +36,7 @@ private:
     QPointF m_anchor;
     QFont m_font;
     QChart *m_chart;
+    QPointF _offsetLegend;
 };
 
 #endif // CALLOUT_H

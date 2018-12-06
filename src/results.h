@@ -43,6 +43,8 @@ private:
     Ui::Results *ui;
     int _margin;
     double _aspectRatio;
+    QPoint _offsetLegends;
+
     void resizeWidgetSubplot(QWidget*, int row, int numberRow, int col, int numberCol, double aspectRatio);
     void fillTimeFrameGraph(QStackedWidget*, const std::string &title, const std::vector<Frame>&frames, Type type);
 

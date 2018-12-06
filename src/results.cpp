@@ -20,7 +20,8 @@ Results::Results(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Results),
     _margin(3),
-    _aspectRatio(-1)
+    _aspectRatio(-1),
+    _offsetLegends(75, 50)
 {
     ui->setupUi(this);
 }
@@ -39,6 +40,10 @@ void Results::prepareWidgets()
 
     // Fill the model
     {
+        // Delete previously created stuff
+        for (int i = ui->modelPositionWidget->count() - 1; i >= 0; --i)
+            ui->modelPositionWidget->removeWidget(ui->modelPositionWidget->widget(i));
+
         Point2d bottomLeft(std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
         Point2d topRight(std::numeric_limits<double>::min(), std::numeric_limits<double>::min());
         for (size_t f = 0; f < kino.size(); ++f){
@@ -104,7 +109,7 @@ void Results::prepareWidgets()
             actualComSerie->setMarkerSize(comiSerie->markerSize() * 1.5);
             chart->addSeries(actualComSerie);
 
-            Callout * tooltip = new Callout(chart);
+            Callout * tooltip = new Callout(chart, _offsetLegends);
             QPointF comPoint(com[f].GetPoint2d(0).GetX(), com[f].GetPoint2d(0).GetY());
             tooltip->setText(QString("X: %1 \nY: %2 ").arg(comPoint.x()).arg(comPoint.y()));
             tooltip->setAnchor(comPoint);
@@ -143,64 +148,72 @@ void Results::prepareWidgets()
     fillTimeFrameGraph(ui->comAccelerationWidget, "CoM acceleration (m/s²)", GetMainWindow().GetComAcceleration(), POINT_Y);
     fillTimeFrameGraph(ui->grfWidget, "GRF (N)", GetMainWindow().GetGrf(), GRF_Y);
 
-    // Fill the angles
-    double ymin = std::numeric_limits<double>::max();
-    double ymax = std::numeric_limits<double>::min();
-    for (Frame frame : GetMainWindow().GetJointAngle()){
-        // Create the chart
-        QtCharts::QChart *chart = new QtCharts::QChart();
-        chart->setTitle("Joint angles");
-        chart->legend()->detachFromChart();
-        chart->legend()->setBackgroundVisible(true);
-        chart->legend()->setBrush(QBrush(QColor(128, 128, 128, 128)));
-        chart->legend()->setPen(QPen(QColor(192, 192, 192, 192)));
-
-        // Add the chart to the result stackedWidget
-        QtCharts::QChartView *chartView = new QtCharts::QChartView(chart);
-        chartView->setRenderHint(QPainter::Antialiasing);
-        ui->jointAngleWidget->addWidget(chartView);
-
-        // Add the center of mass height
-        size_t nJoints(GetMainWindow().GetModel().GetJoints().size());
-        for (size_t j = 0; j < nJoints; ++j){
-            QtCharts::QSplineSeries *serie = new QtCharts::QSplineSeries();
-            serie->setName(GetMainWindow().GetModel().GetJoints()[j].GetName().c_str());
-            for (Frame frame : GetMainWindow().GetJointAngle())
-                serie->append(frame.GetTime(), frame.GetJoint(j).GetAngleDegree());
-            chart->addSeries(serie);
-
-            if (frame.GetJoint(j).GetAngleDegree() < ymin)
-                ymin = frame.GetJoint(j).GetAngleDegree();
-            if (frame.GetJoint(j).GetAngleDegree() > ymax)
-                ymax = frame.GetJoint(j).GetAngleDegree();
-        }
-    }
-
-    // Add a time bar
-    ymin -= (ymax - ymin) * 0.1;
-    ymax += (ymax - ymin) * 0.1;
-    for (size_t f = 0; f < GetMainWindow().GetJointAngle().size(); ++f)
+    // Fill the joint angles
     {
-        QtCharts::QLineSeries *bar = new QtCharts::QLineSeries();
-        bar->append(GetMainWindow().GetJointAngle()[f].GetTime(), ymin);
-        bar->append(GetMainWindow().GetJointAngle()[f].GetTime(), ymax);
+        // Delete previously created stuff
+        for (int i = ui->jointAngleWidget->count() - 1; i >= 0; --i)
+            ui->jointAngleWidget->removeWidget(ui->jointAngleWidget->widget(i));
 
-        QtCharts::QChartView *chartView(static_cast<QtCharts::QChartView*>(ui->jointAngleWidget->widget(static_cast<int>(f))));
-        chartView->chart()->addSeries(bar);
+        double ymin = std::numeric_limits<double>::max();
+        double ymax = std::numeric_limits<double>::min();
+        for (Frame frame : GetMainWindow().GetJointAngle()){
 
-        // Make sure the size is okay
-        chartView->chart()->createDefaultAxes();
-        QtCharts::QValueAxis* axisX(static_cast<QtCharts::QValueAxis*>(chartView->chart()->axisX()));
-        QtCharts::QValueAxis* axisY(static_cast<QtCharts::QValueAxis*>(chartView->chart()->axisY()));
-        axisX->setRange(0, axisX->max());
-        axisX->setTickCount(2);
-        axisY->setRange(ymin, ymax);
+            // Create the chart
+            QtCharts::QChart *chart = new QtCharts::QChart();
+            chart->setTitle("Joint angles");
+            chart->legend()->detachFromChart();
+            chart->legend()->setBackgroundVisible(true);
+            chart->legend()->setBrush(QBrush(QColor(128, 128, 128, 128)));
+            chart->legend()->setPen(QPen(QColor(192, 192, 192, 192)));
+
+            // Add the chart to the result stackedWidget
+            QtCharts::QChartView *chartView = new QtCharts::QChartView(chart);
+            chartView->setRenderHint(QPainter::Antialiasing);
+            ui->jointAngleWidget->addWidget(chartView);
+
+            // Add the center of mass height
+            size_t nJoints(GetMainWindow().GetModel().GetJoints().size());
+            for (size_t j = 0; j < nJoints; ++j){
+                QtCharts::QSplineSeries *serie = new QtCharts::QSplineSeries();
+                serie->setName(GetMainWindow().GetModel().GetJoints()[j].GetName().c_str());
+                for (Frame frame : GetMainWindow().GetJointAngle())
+                    serie->append(frame.GetTime(), frame.GetJoint(j).GetAngleDegree());
+                chart->addSeries(serie);
+
+                if (frame.GetJoint(j).GetAngleDegree() < ymin)
+                    ymin = frame.GetJoint(j).GetAngleDegree();
+                if (frame.GetJoint(j).GetAngleDegree() > ymax)
+                    ymax = frame.GetJoint(j).GetAngleDegree();
+            }
+        }
+
+        // Add a time bar
+        ymin -= (ymax - ymin) * 0.1;
+        ymax += (ymax - ymin) * 0.1;
+        for (size_t f = 0; f < GetMainWindow().GetJointAngle().size(); ++f)
+        {
+            QtCharts::QLineSeries *bar = new QtCharts::QLineSeries();
+            bar->append(GetMainWindow().GetJointAngle()[f].GetTime(), ymin);
+            bar->append(GetMainWindow().GetJointAngle()[f].GetTime(), ymax);
+
+            QtCharts::QChartView *chartView(static_cast<QtCharts::QChartView*>(ui->jointAngleWidget->widget(static_cast<int>(f))));
+            chartView->chart()->addSeries(bar);
+
+            // Make sure the size is okay
+            chartView->chart()->createDefaultAxes();
+            QtCharts::QValueAxis* axisX(static_cast<QtCharts::QValueAxis*>(chartView->chart()->axisX()));
+            QtCharts::QValueAxis* axisY(static_cast<QtCharts::QValueAxis*>(chartView->chart()->axisY()));
+            axisX->setRange(0, axisX->max());
+            axisX->setTickCount(2);
+            axisY->setRange(ymin, ymax);
+        }
     }
 }
 
 void Results::resizeEvent(QResizeEvent *event)
 {
     QDialog::resizeEvent(event);
+    std::cout << size().width() << "; " << size().height() << std::endl;
 
     // Reposition the next button
     QSize previousButtonRectangle(ui->PreviousWidget->size());
@@ -226,20 +239,18 @@ void Results::resizeEvent(QResizeEvent *event)
 
     // Resize the stacked widget
     resizeWidgetSubplot(ui->modelPositionWidget, 0, 1, 0, 4, _aspectRatio);
-    resizeWidgetSubplot(ui->comHeightWidget, 0, 2, 1, 4, 1.0);
-    resizeWidgetSubplot(ui->comVelocityWidget, 1, 2, 1, 4, 1.0);
-    resizeWidgetSubplot(ui->comAccelerationWidget, 0, 2, 2, 4, 1.0);
-    resizeWidgetSubplot(ui->grfWidget, 1, 2, 2, 4, 1.0);
+    double aspectRatioTimeGraph(1.1);
+    resizeWidgetSubplot(ui->comHeightWidget, 0, 2, 1, 4, aspectRatioTimeGraph);
+    resizeWidgetSubplot(ui->comVelocityWidget, 1, 2, 1, 4, aspectRatioTimeGraph);
+    resizeWidgetSubplot(ui->comAccelerationWidget, 0, 2, 2, 4, aspectRatioTimeGraph);
+    resizeWidgetSubplot(ui->grfWidget, 1, 2, 2, 4, aspectRatioTimeGraph);
     resizeWidgetSubplot(ui->jointAngleWidget, 0, 1, 3, 4, _aspectRatio);
 
     // Reposition the legend of angles
     QStackedWidget* w(static_cast<QStackedWidget*>(ui->jointAngleWidget));
     QtCharts::QChartView* cv(static_cast<QtCharts::QChartView*>(w->widget(w->currentIndex())));
     QtCharts::QLegend* legend(cv->chart()->legend());
-    legend->setGeometry(cv->geometry().width()/2 - legend->size().width() / 2 + 18,
-                        cv->geometry().height() - legend->size().height() * 1.5 - 25,
-                        0,
-                        0);
+    legend->setGeometry(_offsetLegends.x(), _offsetLegends.y(), 0, 0);
     legend->adjustSize();
 }
 
@@ -272,6 +283,10 @@ void Results::resizeWidgetSubplot(QWidget * widget, int row, int numberRow, int 
 
 void Results::fillTimeFrameGraph(QStackedWidget * widget, const std::string& title, const std::vector<Frame> &frames, Type type)
 {
+    // Delete previously created stuff
+    for (int i = widget->count() - 1; i >= 0; --i)
+        widget->removeWidget(widget->widget(i));
+
     for (Frame frame : frames){
         // Create the chart
         QtCharts::QChart *chart = new QtCharts::QChart();

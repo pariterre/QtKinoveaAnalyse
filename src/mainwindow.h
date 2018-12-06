@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <sstream>
 #include <memory>
 #include <vector>
 
@@ -49,10 +50,12 @@ private slots:
     void on_exportedConfigEdit_textChanged(const QString &arg1);
     void on_exportedPathButton_clicked();
     void on_exportedConfigButton_clicked();
-
     void on_computeButton_clicked();
+    void on_subjectMassEdit_editingFinished();
 
 private:
+    double getMassValue();
+
     Ui::MainWindow *ui;
     Results * results;
     std::shared_ptr<KinoveaReader> _kinovea;

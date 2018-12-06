@@ -5,9 +5,10 @@
 #include <QtGui/QMouseEvent>
 #include <QtCharts/QChart>
 
-Callout::Callout(QChart *chart):
+Callout::Callout(QChart *chart, const QPointF &offset):
     QGraphicsItem(chart),
-    m_chart(chart)
+    m_chart(chart),
+    _offsetLegend(offset)
 {
 }
 
@@ -103,5 +104,5 @@ void Callout::setAnchor(QPointF point)
 void Callout::updateGeometry()
 {
     prepareGeometryChange();
-    setPos(m_chart->mapToPosition(m_anchor));
+    setPos(m_chart->mapToPosition(m_anchor) + _offsetLegend);
 }
