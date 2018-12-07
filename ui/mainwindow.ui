@@ -53,7 +53,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>/home/pariterre/programmation/QtKinoveaAnalyse/box_jump_tp.xml</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="label">
@@ -92,7 +92,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>/home/pariterre/programmation/QtKinoveaAnalyse/Winter.xml</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="exportedConfigButton">
@@ -131,7 +131,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>10</string>
+     <string/>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>

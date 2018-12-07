@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ProportionalModel Title="WinterSagittal" Version="1.0">
+    <!-- Declare all the landmarks that going to be use later in this file.
+    Attribute Name is the name of the lardmark-->
+    <Landmarks>
+        <Landmark Name="Hanche" />
+        <Landmark Name="Genou" />
+        <Landmark Name="Malleole" />
+        <Landmark Name="Pied" />
+        <Landmark Name="Epaule" />
+        <Landmark Name="Coude" />
+        <Landmark Name="Main" />
+        <Landmark Name="Tete" />
+    </Landmarks>
+
+    <!-- Declare all the segments of the model. 
+    Attribute Name is the name of the segment
+    Proximal and Distal tags should refer to landmarks that were previously defined in landmarks, 
+    RelativeMass is the relative mass of the segment assuming that the total mass is "1",
+    CenterOfMassFromProximal is the position of the center of mass assuming the position
+    of proximal landmark is "0" and distal landmark is "1" -->
+    <Segments>
+        <Segment Name="TroncTete">
+            <Proximal>Epaule</Proximal>
+            <Distal>Hanche</Distal>
+            <RelativeMass>0.578</RelativeMass>
+            <CenterOfMassFromProximal>0.66</CenterOfMassFromProximal>
+        </Segment>
+        
+        <Segment Name="BrasGauche">
+            <Proximal>Epaule</Proximal>
+            <Distal>Coude</Distal>
+            <RelativeMass>0.028</RelativeMass>
+            <CenterOfMassFromProximal>0.436</CenterOfMassFromProximal>
+        </Segment>
+        
+        <Segment Name="AvantBrasGauche">
+            <Proximal>Coude</Proximal>
+            <Distal>Main</Distal>
+            <RelativeMass>0.016</RelativeMass>
+            <CenterOfMassFromProximal>0.43</CenterOfMassFromProximal>
+        </Segment>
+        
+        <Segment Name="BrasDroit">
+            <Proximal>Epaule</Proximal>
+            <Distal>Coude</Distal>
+            <RelativeMass>0.028</RelativeMass>
+            <CenterOfMassFromProximal>0.436</CenterOfMassFromProximal>
+        </Segment>
+        
+        <Segment Name="AvantBrasDroit">
+            <Proximal>Coude</Proximal>
+            <Distal>Main</Distal>
+            <RelativeMass>0.016</RelativeMass>
+            <CenterOfMassFromProximal>0.43</CenterOfMassFromProximal>
+        </Segment>
+        
+        <Segment Name="CuisseGauche">
+            <Proximal>Hanche</Proximal>
+            <Distal>Genou</Distal>
+            <RelativeMass>0.1</RelativeMass>
+            <CenterOfMassFromProximal>0.433</CenterOfMassFromProximal>
+        </Segment>
+        
+        <Segment Name="JambeGauche">
+            <Proximal>Genou</Proximal>
+            <Distal>Malleole</Distal>
+            <RelativeMass>0.0465</RelativeMass>
+            <CenterOfMassFromProximal>0.433</CenterOfMassFromProximal>
+        </Segment>
+        
+        <Segment Name="PiedGauche">
+            <Proximal>Malleole</Proximal>
+            <Distal>Pied</Distal>
+            <RelativeMass>0.0145</RelativeMass>
+            <CenterOfMassFromProximal>0.5</CenterOfMassFromProximal>
+        </Segment>
+        
+        <Segment Name="CuisseDroite">
+            <Proximal>Hanche</Proximal>
+            <Distal>Genou</Distal>
+            <RelativeMass>0.1</RelativeMass>
+            <CenterOfMassFromProximal>0.433</CenterOfMassFromProximal>
+        </Segment>
+        
+        <Segment Name="JambeDroite">
+            <Proximal>Genou</Proximal>
+            <Distal>Malleole</Distal>
+            <RelativeMass>0.0465</RelativeMass>
+            <CenterOfMassFromProximal>0.433</CenterOfMassFromProximal>
+        </Segment>
+        
+        <Segment Name="PiedDroit">
+            <Proximal>Malleole</Proximal>
+            <Distal>Pied</Distal>
+            <RelativeMass>0.0145</RelativeMass>
+            <CenterOfMassFromProximal>0.5</CenterOfMassFromProximal>
+        </Segment>
+    </Segments>
+
+<!-- Declare all the segments of the model. 
+    Name is the name of the segment
+    Origin, Begin and End tags should refer to landmarks that were previously defined in landmarks.
+    Angles are computed by using the following algorith : 
+    Vect1 = End - Origin
+    Vect2 = Begin - Origin
+    angle = arccos( dot(Vect1, Vect2) / (norm(Vect1) * norm(Vect2)) )
+     -->
+    <Joints>
+        <Joint Name="Cheville">
+            <Origin>Malleole</Origin>
+            <Begin>Genou</Begin>
+            <End>Pied</End>
+        </Joint>
+        
+        <Joint Name="Genou">
+            <Origin>Genou</Origin>
+            <Begin>Hanche</Begin>
+            <End>Malleole</End>
+        </Joint>
+        
+        <Joint Name="Hanche">
+            <Origin>Hanche</Origin>
+            <Begin>Epaule</Begin>
+            <End>Genou</End>
+        </Joint>
+        
+        <Joint Name="Epaule">
+            <Origin>Epaule</Origin>
+            <Begin>Hanche</Begin>
+            <End>Coude</End>
+        </Joint>
+        
+        <Joint Name="Coude">
+            <Origin>Coude</Origin>
+            <Begin>Epaule</Begin>
+            <End>Main</End>
+        </Joint>
+        
+    </Joints>
+
+    <!-- Declare the links between landmarks for the display purpose. The vertices 
+    will be linked in order.
+    Attribute Name of Vertice tag is the name of the landmarks
+    -->
+    <StickFigure>
+        <Vertice Name="Pied" />
+        <Vertice Name="Malleole" />
+        <Vertice Name="Genou" />
+        <Vertice Name="Hanche" />
+        <Vertice Name="Epaule" />
+        <Vertice Name="Tete" />
+        <Vertice Name="Epaule" />
+        <Vertice Name="Coude" />
+        <Vertice Name="Main" />
+    </StickFigure>
+</ProportionalModel>
+
