@@ -158,7 +158,7 @@ double MainWindow::getMassValue()
 {
     double mass(-1.0);
     try {
-        mass = std::stod(ui->subjectMassEdit->text().toStdString());
+        mass = KinoMath::stod(ui->subjectMassEdit->text().toStdString());
     } catch (std::invalid_argument) {
         mass = -1.0;
     }

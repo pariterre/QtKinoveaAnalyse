@@ -22,10 +22,8 @@ public:
     static double toDegree(double angleRadian);
     static double toRadian(double angleDegree);
 
-//    template <typename T>
-//    static std::string to_string_with_precision(const T a_value, const int n = 1);
     static std::string to_string_with_precision(double val, const int n = 1);
-
+    static double stod(const std::string &val);
 };
 
 #endif // KINOMATH_H

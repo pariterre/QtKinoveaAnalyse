@@ -6,6 +6,7 @@
 #include <Point2d.h>
 #include <ProportionalModel.h>
 #include <Joint.h>
+#include <KinoMath.h>
 
 KinoveaReader::KinoveaReader()
 {
@@ -88,7 +89,7 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
             valueNode = cell->FirstChild();
             if (!valueNode) // End of the landmark values
                 break;
-            double x(std::stod(valueNode->ToText()->Value()));
+            double x(KinoMath::stod(valueNode->ToText()->Value()));
 
             // Get X value
             col = col->NextSiblingElement("Cell");
@@ -98,7 +99,7 @@ void KinoveaReader::readXml(const std::string &path, const ProportionalModel& mo
             valueNode = cell->FirstChild();
             if (!valueNode) // End of the landmark values
                 break;
-            double y(std::stod(valueNode->ToText()->Value()));
+            double y(KinoMath::stod(valueNode->ToText()->Value()));
 
             // Get Time value
             col = col->NextSiblingElement("Cell");
@@ -157,10 +158,10 @@ double KinoveaReader::parseTime(const std::string &time)
     size_t idxS(time.find_first_of(":", idxM + 1)); // index seconds
     size_t idxF(time.find_first_of(":", idxS + 1)); // index fraction of second
 
-    double hour(std::stod(time.substr(idxH, idxM - idxH)));
-    double min(std::stod(time.substr(idxM + 1, idxS - idxM - 1)));
-    double sec(std::stod(time.substr(idxS + 1, idxF - idxS - 1)));
-    double frac(std::stod(time.substr(idxF + 1)));
+    double hour(KinoMath::stod(time.substr(idxH, idxM - idxH)));
+    double min(KinoMath::stod(time.substr(idxM + 1, idxS - idxM - 1)));
+    double sec(KinoMath::stod(time.substr(idxS + 1, idxF - idxS - 1)));
+    double frac(KinoMath::stod(time.substr(idxF + 1)));
 
     double totalSecond(0);
     totalSecond += frac / static_cast<double>( std::pow(10, time.substr(idxF + 1).size()) );

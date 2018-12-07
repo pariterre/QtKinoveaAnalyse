@@ -1,5 +1,7 @@
 #include <KinoMath.h>
 
+#include <sstream>
+
 #include <ProportionalModel.h>
 #include <KinoveaReader.h>
 #include <Frame.h>
@@ -135,11 +137,11 @@ std::string KinoMath::to_string_with_precision(double val, const int n)
     return out.str();
 }
 
-//template <typename T>
-//std::string KinoMath::to_string_with_precision(const T a_value, const int n)
-//{
-//    std::ostringstream out;
-//    out.precision(n);
-//    out << std::fixed << a_value;
-//    return out.str();
-//}
+double KinoMath::stod(const std::string &val) {
+    double output(-1);
+    std::stringstream ss;
+    std::string s = val;
+    ss << s;
+    ss >> output;
+    return output;
+}

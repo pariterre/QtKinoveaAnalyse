@@ -4,6 +4,7 @@
 #include <Segment.h>
 #include <Landmark.h>
 #include <Joint.h>
+#include <KinoMath.h>
 
 ProportionalModel::ProportionalModel(const std::string &path) :
     _modelName(""),
@@ -22,7 +23,7 @@ void ProportionalModel::readXml(const std::string &path)
         throw std::ios_base::failure("ProportionalModel tag not found");
 
     // Read header
-    _fileVersion = stod(AttributeProperErrorMessage(root, "Version"));
+    _fileVersion = KinoMath::stod(AttributeProperErrorMessage(root, "Version"));
     if (_fileVersion < 1.0)
         throw std::ios_base::failure("Wrong file version");
     _modelName = AttributeProperErrorMessage(root, "Title");
@@ -51,8 +52,8 @@ void ProportionalModel::readXml(const std::string &path)
         segment.SetName(AttributeProperErrorMessage(segmentNode, "Name"));
         segment.SetProximal(GetLandmark(FirstChildToTextValueProtected(FirstChildElementProtected(segmentNode, "Proximal"))));
         segment.SetDistal(GetLandmark(FirstChildToTextValueProtected(FirstChildElementProtected(segmentNode, "Distal"))));
-        segment.SetRelativeMass(stod(FirstChildToTextValueProtected(FirstChildElementProtected(segmentNode, "RelativeMass"))));
-        segment.SetCenterOfMassFromProximal(stod(FirstChildToTextValueProtected(FirstChildElementProtected(segmentNode, "CenterOfMassFromProximal"))));
+        segment.SetRelativeMass(KinoMath::stod(FirstChildToTextValueProtected(FirstChildElementProtected(segmentNode, "RelativeMass"))));
+        segment.SetCenterOfMassFromProximal(KinoMath::stod(FirstChildToTextValueProtected(FirstChildElementProtected(segmentNode, "CenterOfMassFromProximal"))));
         _segments.push_back(segment);
 
         // Move to next sibling
