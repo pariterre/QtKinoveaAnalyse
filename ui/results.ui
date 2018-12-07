@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>950</width>
-    <height>500</height>
+    <width>875</width>
+    <height>550</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Results</string>
   </property>
   <widget class="QStackedWidget" name="modelPositionWidget">
    <property name="geometry">

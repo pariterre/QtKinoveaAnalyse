@@ -18,7 +18,7 @@ class Results : public QDialog
     Q_OBJECT
 
 public:
-    explicit Results(QWidget *parent = nullptr);
+    explicit Results(MainWindow*main);
     ~Results();
 
     void prepareWidgets();
@@ -39,8 +39,8 @@ private:
         GRF_X,
         GRF_Y
     };
-
     Ui::Results *ui;
+    MainWindow * _mainWindow;
     int _margin;
     double _aspectRatio;
     QPoint _offsetLegends;
@@ -48,8 +48,7 @@ private:
     void resizeWidgetSubplot(QWidget*, int row, int numberRow, int col, int numberCol, double aspectRatio);
     void fillTimeFrameGraph(QStackedWidget*, const std::string &title, const std::vector<Frame>&frames, Type type);
 
-    const MainWindow & GetMainWindow();
+    const MainWindow *GetMainWindow();
 };
-#include <mainwindow.h>
 
 #endif // RESULTS_H

@@ -15,10 +15,12 @@
 #include <Point2d.h>
 #include <Joint.h>
 #include <QCallout.h>
+#include <mainwindow.h>
 
-Results::Results(QWidget *parent) :
-    QDialog(parent),
+Results::Results(MainWindow *mainWindow) :
+    QDialog(),
     ui(new Ui::Results),
+    _mainWindow(mainWindow),
     _margin(3),
     _aspectRatio(-1),
     _offsetLegends(75, 50)
@@ -34,9 +36,9 @@ Results::~Results()
 void Results::prepareWidgets()
 {
     // Aliases
-    const std::vector<Frame>& kino(GetMainWindow().GetKinovea().GetFrames());
-    const std::vector<Landmark>& stickLinks(GetMainWindow().GetModel().GetStickLink());
-    const std::vector<Frame>& all_comi(GetMainWindow().GetComi());
+    const std::vector<Frame>& kino(GetMainWindow()->GetKinovea().GetFrames());
+    const std::vector<Landmark>& stickLinks(GetMainWindow()->GetModel().GetStickLink());
+    const std::vector<Frame>& all_comi(GetMainWindow()->GetComi());
 
     // Fill the model
     {
@@ -97,7 +99,7 @@ void Results::prepareWidgets()
             chart->addSeries(comiSerie);
 
             // Add the center of mass trajectory
-            const std::vector<Frame>& com(GetMainWindow().GetCom());
+            const std::vector<Frame>& com(GetMainWindow()->GetCom());
             QtCharts::QSplineSeries *comSerie = new QtCharts::QSplineSeries();
             for (Frame frame : com)
                 comSerie->append(frame.GetPoint2d(0).GetX(), frame.GetPoint2d(0).GetY());
@@ -143,10 +145,10 @@ void Results::prepareWidgets()
     }
 
     // Fill the dynamics
-    fillTimeFrameGraph(ui->comHeightWidget, "CoM height (m)", GetMainWindow().GetCom(), POINT_Y);
-    fillTimeFrameGraph(ui->comVelocityWidget, "CoM Velocity (m/s)", GetMainWindow().GetComVelocity(), POINT_Y);
-    fillTimeFrameGraph(ui->comAccelerationWidget, "CoM acceleration (m/s²)", GetMainWindow().GetComAcceleration(), POINT_Y);
-    fillTimeFrameGraph(ui->grfWidget, "GRF (N)", GetMainWindow().GetGrf(), GRF_Y);
+    fillTimeFrameGraph(ui->comHeightWidget, "CoM height (m)", GetMainWindow()->GetCom(), POINT_Y);
+    fillTimeFrameGraph(ui->comVelocityWidget, "CoM Velocity (m/s)", GetMainWindow()->GetComVelocity(), POINT_Y);
+    fillTimeFrameGraph(ui->comAccelerationWidget, "CoM acceleration (m/s²)", GetMainWindow()->GetComAcceleration(), POINT_Y);
+    fillTimeFrameGraph(ui->grfWidget, "GRF (N)", GetMainWindow()->GetGrf(), GRF_Y);
 
     // Fill the joint angles
     {
@@ -156,7 +158,7 @@ void Results::prepareWidgets()
 
         double ymin = std::numeric_limits<double>::max();
         double ymax = std::numeric_limits<double>::min();
-        for (Frame frame : GetMainWindow().GetJointAngle()){
+        for (Frame frame : GetMainWindow()->GetJointAngle()){
 
             // Create the chart
             QtCharts::QChart *chart = new QtCharts::QChart();
@@ -172,11 +174,11 @@ void Results::prepareWidgets()
             ui->jointAngleWidget->addWidget(chartView);
 
             // Add the center of mass height
-            size_t nJoints(GetMainWindow().GetModel().GetJoints().size());
+            size_t nJoints(GetMainWindow()->GetModel().GetJoints().size());
             for (size_t j = 0; j < nJoints; ++j){
                 QtCharts::QSplineSeries *serie = new QtCharts::QSplineSeries();
-                serie->setName(GetMainWindow().GetModel().GetJoints()[j].GetName().c_str());
-                for (Frame frame : GetMainWindow().GetJointAngle())
+                serie->setName(GetMainWindow()->GetModel().GetJoints()[j].GetName().c_str());
+                for (Frame frame : GetMainWindow()->GetJointAngle())
                     serie->append(frame.GetTime(), frame.GetJoint(j).GetAngleDegree());
                 chart->addSeries(serie);
 
@@ -190,11 +192,11 @@ void Results::prepareWidgets()
         // Add a time bar
         ymin -= (ymax - ymin) * 0.1;
         ymax += (ymax - ymin) * 0.1;
-        for (size_t f = 0; f < GetMainWindow().GetJointAngle().size(); ++f)
+        for (size_t f = 0; f < GetMainWindow()->GetJointAngle().size(); ++f)
         {
             QtCharts::QLineSeries *bar = new QtCharts::QLineSeries();
-            bar->append(GetMainWindow().GetJointAngle()[f].GetTime(), ymin);
-            bar->append(GetMainWindow().GetJointAngle()[f].GetTime(), ymax);
+            bar->append(GetMainWindow()->GetJointAngle()[f].GetTime(), ymin);
+            bar->append(GetMainWindow()->GetJointAngle()[f].GetTime(), ymax);
 
             QtCharts::QChartView *chartView(static_cast<QtCharts::QChartView*>(ui->jointAngleWidget->widget(static_cast<int>(f))));
             chartView->chart()->addSeries(bar);
@@ -213,7 +215,6 @@ void Results::prepareWidgets()
 void Results::resizeEvent(QResizeEvent *event)
 {
     QDialog::resizeEvent(event);
-    std::cout << size().width() << "; " << size().height() << std::endl;
 
     // Reposition the next button
     QSize previousButtonRectangle(ui->PreviousWidget->size());
@@ -249,9 +250,11 @@ void Results::resizeEvent(QResizeEvent *event)
     // Reposition the legend of angles
     QStackedWidget* w(static_cast<QStackedWidget*>(ui->jointAngleWidget));
     QtCharts::QChartView* cv(static_cast<QtCharts::QChartView*>(w->widget(w->currentIndex())));
-    QtCharts::QLegend* legend(cv->chart()->legend());
-    legend->setGeometry(_offsetLegends.x(), _offsetLegends.y(), 0, 0);
-    legend->adjustSize();
+    if (cv){
+        QtCharts::QLegend* legend(cv->chart()->legend());
+        legend->setGeometry(_offsetLegends.x(), _offsetLegends.y(), 0, 0);
+        legend->adjustSize();
+    }
 }
 
 void Results::showEvent(QShowEvent *event)
@@ -339,9 +342,9 @@ void Results::fillTimeFrameGraph(QStackedWidget * widget, const std::string& tit
    }
 }
 
-const MainWindow & Results::GetMainWindow()
+const MainWindow * Results::GetMainWindow()
 {
-    return *dynamic_cast<MainWindow*>(this->parent());
+    return _mainWindow;
 }
 
 void Results::on_NextWidget_clicked()

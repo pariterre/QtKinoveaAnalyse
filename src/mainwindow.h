@@ -56,8 +56,8 @@ private slots:
 private:
     double getMassValue();
 
-    Ui::MainWindow *ui;
-    Results * results;
+    Ui::MainWindow * ui;
+    Results * _results;
     std::shared_ptr<KinoveaReader> _kinovea;
     std::shared_ptr<ProportionalModel> _model;
 

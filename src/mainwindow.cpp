@@ -14,18 +14,16 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    results(new Results(this)),
+    _results(new Results(this)),
     _kinovea(new KinoveaReader()),
     _model(new ProportionalModel())
 {
     ui->setupUi(this);
-    results->setWindowModality(Qt::ApplicationModal);
     isPathsReady();
 }
 
 MainWindow::~MainWindow()
 {
-    delete results;
     delete ui;
 }
 
@@ -102,7 +100,6 @@ void MainWindow::on_exportedPathEdit_textChanged(const QString &arg1)
     isPathsReady();
 }
 
-
 void MainWindow::on_exportedConfigButton_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
@@ -142,8 +139,9 @@ void MainWindow::on_computeButton_clicked()
     _jointVelocity = KinoMath::computeDerivative(_jointAngle);
     _jointAcceleration = KinoMath::computeDerivative(_jointVelocity);
 
-    results->prepareWidgets();
-    results->show();
+    _results->setModal(true);
+    _results->prepareWidgets();
+    _results->show();
 }
 
 void MainWindow::on_subjectMassEdit_editingFinished()
